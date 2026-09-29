@@ -1,0 +1,59 @@
+# Contelb Contabilidade: configuração do Apache (HostGator)
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # URLs do site antigo (.php) vão direto para as novas, com 301 para manter o SEO
+  RewriteRule ^index\.php$ https://www.contelb.com.br/ [R=301,L]
+  RewriteRule ^sobre-nos\.php$ https://www.contelb.com.br/sobre/ [R=301,L]
+  RewriteRule ^abrir-empresa\.php$ https://www.contelb.com.br/abrir-empresa-brasilia/ [R=301,L]
+  RewriteRule ^trocar-de-contador\.php$ https://www.contelb.com.br/trocar-de-contador/ [R=301,L]
+  RewriteRule ^s-contabilidade\.php$ https://www.contelb.com.br/servicos/contabilidade-completa/ [R=301,L]
+  RewriteRule ^s-trabalhista\.php$ https://www.contelb.com.br/servicos/obrigacoes-trabalhistas/ [R=301,L]
+  RewriteRule ^s-assessoria\.php$ https://www.contelb.com.br/servicos/assessoria-empresarial/ [R=301,L]
+  RewriteRule ^s-meime\.php$ https://www.contelb.com.br/servicos/migrar-mei-para-me/ [R=301,L]
+  RewriteRule ^contato\.php$ https://www.contelb.com.br/contato/ [R=301,L]
+  RewriteRule ^area-do-cliente/?$ https://contelbcontabilidade.app.questorpublico.com.br/Authorize/LogOn [R=302,L]
+
+  # Endereço canônico: sempre HTTPS e com www
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} !^www\.contelb\.com\.br$ [NC]
+  RewriteCond %{HTTP_HOST} contelb\.com\.br$ [NC]
+  RewriteRule ^ https://www.contelb.com.br%{REQUEST_URI} [R=301,L]
+
+  # /pagina/index.html vira /pagina/
+  RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  <FilesMatch "\.(woff2|avif|webp|jpg|png|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(html|xml|txt)$">
+    Header set Cache-Control "public, max-age=600"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType image/avif .avif
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+  AddType image/svg+xml .svg
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json application/ld+json application/xml image/svg+xml
+</IfModule>
