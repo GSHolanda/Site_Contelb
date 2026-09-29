@@ -39,9 +39,16 @@ node gerador/gerar.mjs
 
 ## Pré-visualizar
 
+No Windows, dê dois cliques em `ver-site.bat`. Ele abre o navegador em `http://localhost:8080` e liga um servidor local (com Python ou Node.js).
+
+No PowerShell, os comandos vão em linhas separadas:
+
 ```
-cd site && python3 -m http.server 8080
+cd site
+py -m http.server 8080
 ```
+
+No Mac ou Linux: `cd site && python3 -m http.server 8080`.
 
 Abra `http://localhost:8080`. Um servidor local é necessário porque os links usam caminhos a partir da raiz (`/sobre/`, `/assets/...`), como no site no ar.
 
