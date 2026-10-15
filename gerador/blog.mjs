@@ -1,10 +1,24 @@
-// Blog: os mesmos posts, datas, categorias e resumos do blog original da Contelb
+// Blog: os mesmos posts, datas, categorias, resumos e textos do blog original da Contelb
 // (contelb.com.br/blog/pagina e /blog/pagina/2), na mesma ordem e com 8 posts por página.
-// Os textos completos continuam no sistema de blog original; o "Leia mais" abre cada post lá.
+// O texto completo de cada post vem de gerador/posts/<slug>.html (limpo por ferramentas/limpar-posts.py).
+// Os endereços seguem os do blog antigo: /blog/<slug>/.
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SITE } from './dados.mjs';
-import { icone, topoPagina, relacionados, trilhaSchema, esc } from './layout.mjs';
+import { icone, topoPagina, relacionados, trilhaSchema, ctaFaixa, btnWhats, esc } from './layout.mjs';
 
-const ORIGEM = 'https://www.contelb.com.br/blog/';
+const PASTA_POSTS = join(dirname(fileURLToPath(import.meta.url)), 'posts');
+
+// Imagens de capa recebidas da Contelb (os demais posts usam a capa desenhada da categoria)
+const IMAGENS = {
+  'novo-padrao-amplia-as-possibilidades-de-registro-de-empresas-sem-impactar-os-cnpjs-ja-existentes-que-permanecem-validos': ['cnpj-alfanumerico', 541, 429],
+  'nfs-e-nacional-passa-a-ser-obrigatoria-para-empresas-do-simples-nacional-saiba-o-que-muda': ['nfs-e-nacional', 1200, 800],
+  'stf-confirma-suspensao-de-penalidades-sobre-saude-mental-no-trabalho': ['nr-01', 750, 409],
+  '5-riscos-graves-de-nao-fazer-uma-gestao-adequada-da-nova-nr-1': ['nr-01', 750, 409],
+  'parametrizacao-do-ibs-e-da-cbs-nos-documentos-fiscais-eletronicos': ['ibs', 556, 359],
+  'fim-da-escala-6x1-presidente-do-senado-sinaliza-apoio-a-pec-e-defende-reducao-da-jornada-sem-periodo-de-transicao': ['logo-contelb-blog', 491, 508, 'logo'],
+};
 export const POR_PAGINA = 8;
 
 export const CATEGORIAS = {
@@ -30,12 +44,12 @@ export const POSTS = [
   ['mei-reajuste-exclusivo-do-teto-de-faturamento-pode-gerar-distorcoes-no-simples-nacional-alertam-deputados', 'MEI: reajuste exclusivo do teto de faturamento pode gerar distorções no Simples Nacional, alertam deputados', '09/07/2026 16:59', 'noticia', 'Projeto do governo eleva teto do...'],
   ['stj-regulamenta-o-julgamento-de-conflitos-federativos-relacionados-ao-ibs', 'STJ regulamenta o julgamento de conflitos federativos relacionados ao IBS', '09/07/2026 16:49', 'reforma-tributaria', 'A Reforma Tributária avançou mais uma etapa com a regulamentação,...'],
   ['5-riscos-graves-de-nao-fazer-uma-gestao-adequada-da-nova-nr-1', '5 riscos graves de não fazer uma gestão adequada da nova NR-1', '09/07/2026 10:49', 'gestao-de-pessoas', 'A nova NR-1 entrou em vigor e trouxe uma mudança que está transformando a forma como as empresas lidam com saúde e segurança no trabalho. Fatores...'],
-].map(([slug, titulo, data, cat, resumo]) => ({ slug, titulo, data, cat, resumo, url: ORIGEM + slug }));
+].map(([slug, titulo, data, cat, resumo]) => ({ slug, titulo, data, cat, resumo, url: `/blog/${slug}/`, abs: `${SITE}/blog/${slug}/`, img: IMAGENS[slug] }));
 
 const isoData = (d) => { const [dia, mes, resto] = d.split('/'); const [ano, hora] = resto.split(' '); return `${ano}-${mes}-${dia}T${hora}:00-03:00`; };
 
 function compartilhar(p) {
-  const u = encodeURIComponent(p.url);
+  const u = encodeURIComponent(p.abs);
   const t = encodeURIComponent(p.titulo);
   const redes = [
     ['facebook', 'Facebook', `https://www.facebook.com/sharer/sharer.php?u=${u}`],
@@ -49,13 +63,21 @@ function compartilhar(p) {
         </details>`;
 }
 
+function capa(p, c, lazy = true) {
+  if (p.img) {
+    const [nome, w, h] = p.img;
+    return `<picture><source type="image/webp" srcset="/assets/img/blog/${nome}.webp"><img src="/assets/img/blog/${nome}.jpg" width="${w}" height="${h}" alt=""${lazy ? ' loading="lazy"' : ''} decoding="async"></picture>`;
+  }
+  return `<svg class="post-capa-linha" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150C30 140 48 92 72 90C96 88 104 122 128 122C156 122 174 80 200 70"/></svg>
+          ${icone(c.icone, 'ic post-capa-ic')}`;
+}
+
 function cartao(p, i) {
   const c = CATEGORIAS[p.cat];
   return `<li class="post rv" style="--i:${i % 4}">
       <article class="post-in" aria-labelledby="post-${i}">
-        <a class="post-capa post-capa-${p.cat}" href="${p.url}" tabindex="-1" aria-hidden="true">
-          <svg class="post-capa-linha" viewBox="0 0 200 200" preserveAspectRatio="none"><path d="M0 150C30 140 48 92 72 90C96 88 104 122 128 122C156 122 174 80 200 70"/></svg>
-          ${icone(c.icone, 'ic post-capa-ic')}
+        <a class="post-capa post-capa-${p.cat}${p.img ? ' com-foto' + (p.img[3] ? ' foto-logo' : '') : ''}" href="${p.url}" tabindex="-1" aria-hidden="true">
+          ${capa(p, c)}
           <span class="post-capa-cat">${c.nome}</span>
         </a>
         <div class="post-corpo">
@@ -124,6 +146,77 @@ function paginasDe(lista, base, rotulo, catAtual, meta) {
   return out;
 }
 
+function paginaPost(p) {
+  const c = CATEGORIAS[p.cat];
+  const trilha = [{ nome: 'Início', url: '/' }, { nome: 'Blog', url: '/blog/' }, { nome: c.nome, url: `/blog/categoria/${p.cat}/` }, { nome: p.titulo, url: p.url }];
+  const corpoPost = readFileSync(join(PASTA_POSTS, `${p.slug}.html`), 'utf8');
+  const mesmos = POSTS.filter((o) => o.cat === p.cat && o.slug !== p.slug).slice(0, 4);
+  const resumoLimpo = p.resumo.replace(/\.\.\.$/, '').replace(/[,;]$/, '');
+  const descricao = (resumoLimpo.length > 150 ? resumoLimpo.slice(0, 150).replace(/\s+\S*$/, '') : resumoLimpo) + '.';
+  const figura = p.img
+    ? `<figure class="post-figura${p.img[3] ? ' foto-logo' : ''}">${capa(p, c, false).replace('alt=""', `alt="${esc(p.titulo)}"`)}</figure>`
+    : '';
+  const corpo = `<section class="pagina-topo post-topo">
+  <div class="wrap">
+    <nav class="trilha" aria-label="Você está em"><ol>${trilha.map((t, i) => (i === trilha.length - 1 ? `<li><span aria-current="page">Post</span></li>` : `<li><a href="${t.url}">${t.nome}</a></li>`)).join('')}</ol></nav>
+    <p class="kicker">${c.nome}</p>
+    <h1 class="post-h1">${p.titulo}</h1>
+    <p class="post-meta post-meta-topo"><span>${icone('calendario')}<time datetime="${isoData(p.data)}">${p.data}</time></span><span>Por Contelb Contabilidade</span></p>
+  </div>
+</section>
+<section class="secao artigo-corpo">
+  <div class="wrap artigo-grade">
+    <article class="prosa post-prosa">
+      ${figura}
+      ${corpoPost}
+      <div class="post-fim">
+        ${compartilhar(p)}
+        <a class="link-seta" href="/blog/">Ver todos os posts${icone('seta')}</a>
+      </div>
+    </article>
+    <aside class="artigo-lado">
+      <div class="alerta alerta-cta">
+        <p class="alerta-tit">Dúvidas sobre este assunto?</p>
+        <p>Um especialista da Contelb explica o que muda para a sua empresa.</p>
+        ${btnWhats('Falar com especialista', `Olá! Li o post "${p.titulo}" no site e tenho uma dúvida.`, 'btn btn-primario')}
+      </div>
+      ${mesmos.length ? `<nav class="artigo-outros" aria-label="Mais posts de ${c.nome}">
+        <p class="alerta-tit">Mais de ${c.nome}</p>
+        <ul>${mesmos.map((o) => `<li><a href="${o.url}">${o.titulo}</a></li>`).join('')}</ul>
+      </nav>` : ''}
+    </aside>
+  </div>
+</section>
+${ctaFaixa({ msg: `Olá! Li o post "${p.titulo}" no site e quero conversar com um especialista.` })}`;
+  return {
+    url: p.url,
+    titulo: `${p.titulo.length > 62 ? p.titulo.slice(0, 62).replace(/\s+\S*$/, '') + '...' : p.titulo} | Blog Contelb`,
+    descricao,
+    corpo,
+    ogTipo: 'article',
+    og: p.img ? `${SITE}/assets/img/blog/${p.img[0]}.jpg` : undefined,
+    classe: 'pg-post',
+    schema: [
+      trilhaSchema(p.abs, trilha),
+      {
+        '@type': 'BlogPosting',
+        '@id': `${p.abs}#post`,
+        headline: p.titulo,
+        description: descricao,
+        articleSection: c.nome,
+        inLanguage: 'pt-BR',
+        datePublished: isoData(p.data),
+        dateModified: isoData(p.data),
+        mainEntityOfPage: { '@id': `${p.abs}#pagina` },
+        author: { '@id': `${SITE}/#organizacao` },
+        publisher: { '@id': `${SITE}/#organizacao` },
+        image: p.img ? `${SITE}/assets/img/blog/${p.img[0]}.jpg` : `${SITE}/assets/img/og-contelb.jpg`,
+      },
+    ],
+    prioridade: '0.6',
+  };
+}
+
 export function paginasBlog() {
   const geral = paginasDe(POSTS, '/blog/', 'Blog', null, {
     titulo: 'Blog da Contelb | Notícias de Contabilidade, Tributos e Gestão de Pessoas',
@@ -139,5 +232,5 @@ export function paginasBlog() {
       intro: `Todos os posts da categoria ${c.nome}.`,
     })
   );
-  return [...geral, ...porCat];
+  return [...geral, ...porCat, ...POSTS.map(paginaPost)];
 }

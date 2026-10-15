@@ -29,7 +29,8 @@ Os textos vivem em `gerador/`:
 - `home.mjs`: página inicial.
 - `servicos.mjs`: as oito páginas de serviço (contabilidade, trabalhista, assessoria, MEI, abrir empresa, trocar de contador, planejamento tributário, recuperação de créditos).
 - `outras.mjs`: Sobre, hub de serviços, Contato, Política de privacidade e 404.
-- `blog.mjs`: o blog, com os mesmos 15 posts do blog original (título, data, categoria e resumo), 8 por página, filtros por categoria e compartilhamento. Para incluir um post novo, adicione uma linha no topo da lista `POSTS`. O "Leia mais" abre o texto completo no sistema de blog original, em `contelb.com.br/blog/<slug>`.
+- `blog.mjs`: o blog, com os 15 posts do blog original (título, data, categoria, resumo e texto completo), 8 por página, filtros por categoria, compartilhamento e uma página por post em `/blog/<slug>/`, o mesmo endereço do blog antigo.
+- `posts/`: o texto de cada post, em HTML limpo. Foi gerado a partir da exportação do blog antigo com `python3 -I gerador/ferramentas/limpar-posts.py <pasta-exportada> gerador/posts`. Para um post novo: crie `posts/<slug>.html` e adicione uma linha no topo da lista `POSTS` em `blog.mjs` (e a imagem em `IMAGENS`, se houver).
 - `layout.mjs`: cabeçalho, rodapé, metatags, Open Graph e dados estruturados (JSON-LD).
 
 Depois de editar, gere as páginas de novo:
@@ -69,7 +70,7 @@ Abra `http://localhost:8080`. Um servidor local é necessário porque os links u
 
 ## Pendências para confirmar com a Contelb
 
-- Blog: as imagens de capa dos posts (a pasta salva junto com a página do blog) e, se o blog original for desligado, o texto completo de cada post. Antes de publicar, conferir como o blog original está instalado na hospedagem, para a pasta `blog/` do novo site não conflitar com ele.
+- Blog: faltam as imagens de capa de 9 posts (estão com a capa desenhada da categoria). Na publicação, o sistema de blog antigo em `public_html/blog` precisa ser desativado ou renomeado, porque o novo site passa a servir os mesmos endereços.
 
 - Horário de atendimento (hoje: "Segunda a sexta, em horário comercial"), em `gerador/dados.mjs`.
 - Número de registro no CRC do escritório e do responsável técnico, para incluir no rodapé.

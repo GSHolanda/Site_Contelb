@@ -534,7 +534,7 @@ figcaption{margin-top:12px;font:500 .76rem/1.4 var(--f-mono);letter-spacing:.03e
 .blog-grade{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
 .post-in{display:flex;flex-direction:column;height:100%;background:var(--panel);border:1px solid var(--linha);border-radius:18px;overflow:hidden;transition:transform .45s var(--ease),box-shadow .45s var(--ease),border-color .45s var(--ease)}
 .post-in:hover{transform:translateY(-4px);box-shadow:var(--sombra-alta);border-color:rgba(25,59,133,.3)}
-.post-capa{position:relative;display:grid;place-items:center;aspect-ratio:1;overflow:hidden;background:radial-gradient(ellipse 80% 70% at 85% 10%,rgba(98,184,233,.35),transparent 60%),linear-gradient(150deg,var(--noite-2),var(--noite));color:#fff;text-decoration:none}
+.post-capa{position:relative;display:grid;place-items:center;aspect-ratio:3/2;overflow:hidden;background:radial-gradient(ellipse 80% 70% at 85% 10%,rgba(98,184,233,.35),transparent 60%),linear-gradient(150deg,var(--noite-2),var(--noite));color:#fff;text-decoration:none}
 .post-capa-gestao-de-pessoas{background:radial-gradient(ellipse 80% 70% at 15% 10%,rgba(98,184,233,.32),transparent 60%),linear-gradient(150deg,#1d4596,#0d1d44)}
 .post-capa-reforma-tributaria{background:radial-gradient(ellipse 80% 70% at 85% 90%,rgba(98,184,233,.3),transparent 60%),linear-gradient(200deg,#0b3c6e,var(--noite))}
 .post-capa-linha{position:absolute;inset:auto 0 12% 0;width:100%;height:46%}
@@ -565,6 +565,30 @@ figcaption{margin-top:12px;font:500 .76rem/1.4 var(--f-mono);letter-spacing:.03e
 .paginacao a:hover{border-color:var(--navy)}
 .paginacao span[aria-current]{background:var(--navy);border-color:var(--navy);color:#fff}
 .ic-volta{transform:rotate(180deg)}
+.post-capa picture,.post-capa img{position:absolute;inset:0;width:100%;height:100%}
+.post-capa img{object-fit:cover;transition:transform .8s var(--ease)}
+.post-in:hover .post-capa img{transform:scale(1.04)}
+.post-capa.foto-logo{background:#fff}
+.post-capa.foto-logo img{object-fit:contain;padding:14% 30%}
+.post-capa.com-foto .post-capa-cat{background:rgba(7,16,38,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.post-topo{padding-bottom:clamp(40px,5vw,64px)}
+.post-h1{font-size:clamp(1.8rem,3.4vw,2.8rem);max-width:28ch}
+.post-meta-topo{justify-content:flex-start;gap:8px 22px;font-size:.8rem}
+.post-figura{margin:0 0 2em}
+.post-figura img{width:100%;height:auto;border-radius:18px;box-shadow:var(--sombra)}
+.post-figura.foto-logo{display:grid;place-items:center;padding:40px;background:#fff;border:1px solid var(--linha);border-radius:18px}
+.post-figura.foto-logo img{width:min(220px,50%);box-shadow:none}
+.post-prosa>p:first-of-type{font-size:1.2rem;color:var(--ink)}
+.prosa h3{font-size:1.25rem;margin:1.5em 0 .5em}
+.prosa a{overflow-wrap:anywhere}
+.tabela{overflow-x:auto;margin:0 0 1.4em;border:1px solid var(--linha);border-radius:14px}
+.tabela table{width:100%;border-collapse:collapse;font-size:.98rem}
+.tabela td,.tabela th{padding:10px 14px;border-bottom:1px solid var(--linha);text-align:left;vertical-align:top}
+.tabela tr:first-child td{font-weight:600;background:var(--canvas-2)}
+.tabela tr:last-child td{border-bottom:0}
+.post-fim{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:2.4em;padding-top:1.4em;border-top:1px solid var(--linha)}
+.post-fim .post-share ul{bottom:auto;top:calc(100% + 8px)}
+.post-fim .post-share summary span{position:static;width:auto;height:auto;overflow:visible;clip:auto}
 .artigo-grade{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:clamp(32px,5vw,72px);align-items:start}
 .artigo-lado{position:sticky;top:calc(var(--topo-h) + 24px);display:grid;gap:18px}
 .artigo-outros{padding:24px;border-radius:20px;background:var(--panel);border:1px solid var(--linha)}
@@ -633,7 +657,6 @@ figcaption{margin-top:12px;font:500 .76rem/1.4 var(--f-mono);letter-spacing:.03e
 @media (max-width:640px){
   .cartoes,.deps,.passos-lista,.pilares-lista{grid-template-columns:1fr}
   .blog-grade{grid-template-columns:minmax(0,1fr)}
-  .post-capa{aspect-ratio:16/9}
   .post-capa-ic{width:22%;height:auto}
   .entregas-grade,.entregas-grade.por-4{--por:1}
   .livro-razao{grid-template-columns:1fr 1fr;gap:28px 18px}
