@@ -41,7 +41,7 @@ node gerador/gerar.mjs
 
 ## Pré-visualizar
 
-No Windows, dê dois cliques em `ver-site.bat`. Ele abre o navegador em `http://localhost:8080` e liga um servidor local (com Python ou Node.js).
+No Windows, dê dois cliques em `ver-site.bat`. Ele liga um servidor local feito só com o PowerShell do próprio Windows (`ver-site.ps1`, nada para instalar) e abre o navegador em `http://localhost:8080`. Deixe a janela preta aberta enquanto olha o site.
 
 No PowerShell, os comandos vão em linhas separadas:
 
