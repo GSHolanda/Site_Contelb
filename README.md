@@ -28,7 +28,8 @@ Os textos vivem em `gerador/`:
 - `dados.mjs`: telefone, e-mail, endereços, redes sociais, horário, lista de serviços e menu. NAP em um lugar só.
 - `home.mjs`: página inicial.
 - `servicos.mjs`: as oito páginas de serviço (contabilidade, trabalhista, assessoria, MEI, abrir empresa, trocar de contador, planejamento tributário, recuperação de créditos).
-- `outras.mjs`: Sobre, hub de serviços, Contato, Blog e artigos, Política de privacidade e 404.
+- `outras.mjs`: Sobre, hub de serviços, Contato, Política de privacidade e 404.
+- `blog.mjs`: o blog, com os mesmos 15 posts do blog original (título, data, categoria e resumo), 8 por página, filtros por categoria e compartilhamento. Para incluir um post novo, adicione uma linha no topo da lista `POSTS`. O "Leia mais" abre o texto completo no sistema de blog original, em `contelb.com.br/blog/<slug>`.
 - `layout.mjs`: cabeçalho, rodapé, metatags, Open Graph e dados estruturados (JSON-LD).
 
 Depois de editar, gere as páginas de novo:
@@ -67,6 +68,8 @@ Abra `http://localhost:8080`. Um servidor local é necessário porque os links u
 - Imagens AVIF e WebP com dimensões definidas, `lazy` fora da primeira tela e texto alternativo descritivo.
 
 ## Pendências para confirmar com a Contelb
+
+- Blog: as imagens de capa dos posts (a pasta salva junto com a página do blog) e, se o blog original for desligado, o texto completo de cada post. Antes de publicar, conferir como o blog original está instalado na hospedagem, para a pasta `blog/` do novo site não conflitar com ele.
 
 - Horário de atendimento (hoje: "Segunda a sexta, em horário comercial"), em `gerador/dados.mjs`.
 - Número de registro no CRC do escritório e do responsável técnico, para incluir no rodapé.

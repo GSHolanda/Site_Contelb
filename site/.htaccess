@@ -17,6 +17,7 @@ AddDefaultCharset UTF-8
   RewriteRule ^s-trabalhista\.php$ https://www.contelb.com.br/servicos/obrigacoes-trabalhistas/ [R=301,L]
   RewriteRule ^s-assessoria\.php$ https://www.contelb.com.br/servicos/assessoria-empresarial/ [R=301,L]
   RewriteRule ^s-meime\.php$ https://www.contelb.com.br/servicos/migrar-mei-para-me/ [R=301,L]
+  RewriteRule ^blog/pagina/?$ https://www.contelb.com.br/blog/ [R=301,L]
   RewriteRule ^contato\.php$ https://www.contelb.com.br/contato/ [R=301,L]
   RewriteRule ^area-do-cliente/?$ https://contelbcontabilidade.app.questorpublico.com.br/Authorize/LogOn [R=302,L]
 

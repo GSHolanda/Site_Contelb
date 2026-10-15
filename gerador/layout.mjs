@@ -1,7 +1,7 @@
 // Moldura compartilhada: <head>, cabeçalho, rodapé, blocos reutilizáveis e dados estruturados.
 import { SITE, HOJE, EMPRESA, REDES, UNIDADES, NAV, SERVICOS, whats } from './dados.mjs';
 
-export const VERSAO = '3';
+export const VERSAO = '4';
 export const OG_PADRAO = `${SITE}/assets/img/og-contelb.jpg`;
 
 export const esc = (s = '') =>
@@ -26,6 +26,10 @@ const P = {
   menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   fechar: '<path d="M6 6l12 12M18 6 6 18"/>',
   chev: '<path d="m6 9 6 6 6-6"/>',
+  compartilhar: '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/>',
+  calendario: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  etiqueta: '<path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3a1.5 1.5 0 0 1 0 2.1l-6.2 6.2a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8" cy="8" r="1.3"/>',
+  xis: '<path d="M4 4l16 16M20 4 4 20"/>',
   instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6" fill="currentColor"/>',
   facebook: '<path d="M14 21v-8h3l.5-3.5H14V7.8c0-1 .3-1.8 1.8-1.8h1.9V3a24 24 0 0 0-2.8-.2C12.2 2.8 10.5 4.4 10.5 7.4v2.1h-3V13h3v8"/>',
   linkedin: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.2v.1M11.5 17v-3.8c0-1.6 1-2.7 2.4-2.7s2.1 1 2.1 2.7V17M11.5 10.5V17"/>',
