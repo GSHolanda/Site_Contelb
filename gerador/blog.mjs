@@ -10,11 +10,15 @@ import { icone, topoPagina, relacionados, trilhaSchema, ctaFaixa, btnWhats, esc 
 
 const PASTA_POSTS = join(dirname(fileURLToPath(import.meta.url)), 'posts');
 
-// Imagens de capa recebidas da Contelb (os demais posts usam a capa desenhada da categoria)
+// Imagens de capa recebidas da Contelb, na mesma relação post/imagem do blog antigo
+// (os demais posts usam a capa desenhada da categoria)
 const IMAGENS = {
   'novo-padrao-amplia-as-possibilidades-de-registro-de-empresas-sem-impactar-os-cnpjs-ja-existentes-que-permanecem-validos': ['cnpj-alfanumerico', 541, 429],
   'nfs-e-nacional-passa-a-ser-obrigatoria-para-empresas-do-simples-nacional-saiba-o-que-muda': ['nfs-e-nacional', 1200, 800],
-  'stf-confirma-suspensao-de-penalidades-sobre-saude-mental-no-trabalho': ['nr-01', 750, 409],
+  'stf-confirma-suspensao-de-penalidades-sobre-saude-mental-no-trabalho': ['nr1-saude-mental', 600, 400],
+  '6-obrigacoes-que-todo-mei-precisa-cumprir': ['mei', 447, 447],
+  'receita-federal-publica-primeiros-devedores-contumazes-e-acende-alerta-para-empresas-com-dividas-fiscais-recorrentes': ['devedores-contumazes', 1199, 626],
+  'saque-aniversario-do-fgts-libera-pagamento-para-nascidos-em-agosto-na-segunda-feira-3-8': ['fgts-saque-aniversario', 870, 450],
   '5-riscos-graves-de-nao-fazer-uma-gestao-adequada-da-nova-nr-1': ['nr-01', 750, 409],
   'parametrizacao-do-ibs-e-da-cbs-nos-documentos-fiscais-eletronicos': ['ibs', 556, 359],
   'fim-da-escala-6x1-presidente-do-senado-sinaliza-apoio-a-pec-e-defende-reducao-da-jornada-sem-periodo-de-transicao': ['logo-contelb-blog', 491, 508, 'logo'],
