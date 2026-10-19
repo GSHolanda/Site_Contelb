@@ -70,7 +70,7 @@ Abra `http://localhost:8080`. Um servidor local é necessário porque os links u
 
 ## Pendências para confirmar com a Contelb
 
-- Blog: faltam as imagens de capa de 9 posts (estão com a capa desenhada da categoria). Na publicação, o sistema de blog antigo em `public_html/blog` precisa ser desativado ou renomeado, porque o novo site passa a servir os mesmos endereços.
+- Blog: na publicação, o sistema de blog antigo em `public_html/blog` precisa ser desativado ou renomeado, porque o novo site passa a servir os mesmos endereços.
 
 - Horário de atendimento (hoje: "Segunda a sexta, em horário comercial"), em `gerador/dados.mjs`.
 - Número de registro no CRC do escritório e do responsável técnico, para incluir no rodapé.

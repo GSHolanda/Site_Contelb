@@ -11,12 +11,17 @@ import { icone, topoPagina, relacionados, trilhaSchema, ctaFaixa, btnWhats, esc 
 const PASTA_POSTS = join(dirname(fileURLToPath(import.meta.url)), 'posts');
 
 // Imagens de capa recebidas da Contelb, na mesma relação post/imagem do blog antigo
-// (os demais posts usam a capa desenhada da categoria)
+// (um post sem imagem aqui usa a capa desenhada da categoria)
 const IMAGENS = {
   'novo-padrao-amplia-as-possibilidades-de-registro-de-empresas-sem-impactar-os-cnpjs-ja-existentes-que-permanecem-validos': ['cnpj-alfanumerico', 541, 429],
   'nfs-e-nacional-passa-a-ser-obrigatoria-para-empresas-do-simples-nacional-saiba-o-que-muda': ['nfs-e-nacional', 1200, 800],
   'stf-confirma-suspensao-de-penalidades-sobre-saude-mental-no-trabalho': ['nr1-saude-mental', 600, 400],
   '6-obrigacoes-que-todo-mei-precisa-cumprir': ['mei', 447, 447],
+  'novas-regras-do-credito-do-trabalhador-exigem-adequacao-imediata-na-rotina-contabil': ['escritorio-atendimento', 1200, 800],
+  'cbs-passa-a-incidir-sobre-comprinhas-a-partir-de-2027-e-pode-elevar-custo-das-importacoes-de-baixo-valor': ['escritorio-atendimento', 1200, 800],
+  'mei-reajuste-exclusivo-do-teto-de-faturamento-pode-gerar-distorcoes-no-simples-nacional-alertam-deputados': ['escritorio-atendimento', 1200, 800],
+  'receita-federal-e-comite-gestor-do-ibs-elaboram-ato-conjunto-que-definira-novos-modelos-das-notas-fiscais': ['ibs-cbs', 1200, 800],
+  'stj-regulamenta-o-julgamento-de-conflitos-federativos-relacionados-ao-ibs': ['ibs-cbs', 1200, 800],
   'reforma-tributaria-95-das-empresas-correm-risco-de-ter-notas-fiscais-rejeitadas-por-falta-de-adequacao-a-nova-legislacao': ['reforma-empresas-se-preparam', 799, 449],
   'receita-federal-publica-primeiros-devedores-contumazes-e-acende-alerta-para-empresas-com-dividas-fiscais-recorrentes': ['devedores-contumazes', 1199, 626],
   'saque-aniversario-do-fgts-libera-pagamento-para-nascidos-em-agosto-na-segunda-feira-3-8': ['fgts-saque-aniversario', 870, 450],
