@@ -7,3 +7,10 @@
   from = "/blog/pagina"
   to = "/blog/"
   status = 301
+
+# O endereço do Netlify é só para pré-visualização: não deve aparecer no Google
+# (o site oficial é www.contelb.com.br; cada página já aponta para ele no canonical).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

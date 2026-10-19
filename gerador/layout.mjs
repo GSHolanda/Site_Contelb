@@ -1,7 +1,7 @@
 // Moldura compartilhada: <head>, cabeçalho, rodapé, blocos reutilizáveis e dados estruturados.
 import { SITE, HOJE, EMPRESA, REDES, UNIDADES, NAV, SERVICOS, whats } from './dados.mjs';
 
-export const VERSAO = '5';
+export const VERSAO = '6';
 export const OG_PADRAO = `${SITE}/assets/img/og-contelb.jpg`;
 
 export const esc = (s = '') =>

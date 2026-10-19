@@ -141,8 +141,8 @@ function paginasDe(lista, base, rotulo, catAtual, meta) {
     const posts = lista.slice((n - 1) * POR_PAGINA, n * POR_PAGINA);
     out.push({
       url,
-      titulo: meta.titulo + (n > 1 ? ` | Página ${n}` : ''),
-      descricao: meta.descricao,
+      titulo: n > 1 ? meta.titulo.replace(' | ', ` | Página ${n} | `).replace(/\s\|\s[^|]+$/, '') : meta.titulo,
+      descricao: n > 1 ? `Página ${n} do blog. ${meta.descricao}` : meta.descricao,
       corpo: listagem({ posts, pagina: n, total, base, url, trilha, h1: meta.h1 + (n > 1 ? `, página ${n}` : ''), intro: [meta.intro], catAtual }),
       tipo: 'CollectionPage',
       classe: 'pg-blog',
@@ -156,13 +156,17 @@ function paginasDe(lista, base, rotulo, catAtual, meta) {
   return out;
 }
 
+// títulos de até ~65 caracteres aparecem inteiros no Google
+const tituloCurto = (t, max) => (t.length <= max ? t : t.slice(0, max - 3).replace(/[\s,;:.]+\S*$/, '').replace(/[\s,;:]+$/, '') + '...');
+
 function paginaPost(p) {
   const c = CATEGORIAS[p.cat];
   const trilha = [{ nome: 'Início', url: '/' }, { nome: 'Blog', url: '/blog/' }, { nome: c.nome, url: `/blog/categoria/${p.cat}/` }, { nome: p.titulo, url: p.url }];
   const corpoPost = readFileSync(join(PASTA_POSTS, `${p.slug}.html`), 'utf8');
   const mesmos = POSTS.filter((o) => o.cat === p.cat && o.slug !== p.slug).slice(0, 4);
-  const resumoLimpo = p.resumo.replace(/\.\.\.$/, '').replace(/[,;]$/, '');
-  const descricao = (resumoLimpo.length > 150 ? resumoLimpo.slice(0, 150).replace(/\s+\S*$/, '') : resumoLimpo) + '.';
+  // description: o começo do próprio texto do post, cortado em palavra inteira (até ~155 caracteres)
+  const textoPost = corpoPost.replace(/<h[23]>.*?<\/h[23]>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+  const descricao = textoPost.length > 155 ? textoPost.slice(0, 152).replace(/[\s,;:.]+\S*$/, '') + '...' : textoPost;
   const figura = p.img
     ? `<figure class="post-figura${p.img[3] ? ' foto-logo' : ''}">${capa(p, c, false).replace('alt=""', `alt="${esc(p.titulo)}"`)}</figure>`
     : '';
@@ -200,7 +204,7 @@ function paginaPost(p) {
 ${ctaFaixa({ msg: `Olá! Li o post "${p.titulo}" no site e quero conversar com um especialista.` })}`;
   return {
     url: p.url,
-    titulo: `${p.titulo.length > 62 ? p.titulo.slice(0, 62).replace(/\s+\S*$/, '') + '...' : p.titulo} | Blog Contelb`,
+    titulo: tituloCurto(p.titulo, 58) + ' | Contelb',
     descricao,
     corpo,
     ogTipo: 'article',
@@ -229,7 +233,7 @@ ${ctaFaixa({ msg: `Olá! Li o post "${p.titulo}" no site e quero conversar com u
 
 export function paginasBlog() {
   const geral = paginasDe(POSTS, '/blog/', 'Blog', null, {
-    titulo: 'Blog da Contelb | Notícias de Contabilidade, Tributos e Gestão de Pessoas',
+    titulo: 'Blog da Contelb | Contabilidade, Tributos e Gestão de Pessoas',
     descricao: 'Notícias e orientações da Contelb Contabilidade sobre MEI, Reforma Tributária, eSocial, FGTS e gestão de pessoas para empresas de Brasília e do DF.',
     h1: 'Blog da Contelb: notícias de contabilidade, tributos e gestão de pessoas',
     intro: 'O que muda na legislação e o que isso significa para a sua empresa, com atualização da equipe da Contelb.',

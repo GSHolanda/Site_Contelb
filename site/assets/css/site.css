@@ -36,7 +36,7 @@
 /* ---------- Base ---------- */
 *,*::before,*::after{box-sizing:border-box}
 html{overflow-x:hidden;overflow-x:clip;-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--topo-h) + 20px)}
-body{margin:0;overflow-x:hidden;overflow-x:clip;background:var(--canvas);color:var(--ink);font:400 1.0625rem/1.62 var(--f-texto);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;animation:entra .6s var(--ease) both}
+body{margin:0;overflow-x:hidden;overflow-x:clip;background:var(--canvas);color:var(--ink);font:400 1.0625rem/1.62 var(--f-texto);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 @keyframes entra{from{opacity:0}to{opacity:1}}
 img,svg,picture{display:block;max-width:100%}
 img{height:auto}
