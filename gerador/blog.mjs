@@ -17,6 +17,7 @@ const IMAGENS = {
   'nfs-e-nacional-passa-a-ser-obrigatoria-para-empresas-do-simples-nacional-saiba-o-que-muda': ['nfs-e-nacional', 1200, 800],
   'stf-confirma-suspensao-de-penalidades-sobre-saude-mental-no-trabalho': ['nr1-saude-mental', 600, 400],
   '6-obrigacoes-que-todo-mei-precisa-cumprir': ['mei', 447, 447],
+  'reforma-tributaria-95-das-empresas-correm-risco-de-ter-notas-fiscais-rejeitadas-por-falta-de-adequacao-a-nova-legislacao': ['reforma-empresas-se-preparam', 799, 449],
   'receita-federal-publica-primeiros-devedores-contumazes-e-acende-alerta-para-empresas-com-dividas-fiscais-recorrentes': ['devedores-contumazes', 1199, 626],
   'saque-aniversario-do-fgts-libera-pagamento-para-nascidos-em-agosto-na-segunda-feira-3-8': ['fgts-saque-aniversario', 870, 450],
   '5-riscos-graves-de-nao-fazer-uma-gestao-adequada-da-nova-nr-1': ['nr-01', 750, 409],
