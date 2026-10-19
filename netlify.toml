@@ -1,0 +1,9 @@
+# Pré-visualização no Netlify: publica a pasta site/ como está (não há etapa de build).
+[build]
+  publish = "site"
+  command = ""
+
+[[redirects]]
+  from = "/blog/pagina"
+  to = "/blog/"
+  status = 301
