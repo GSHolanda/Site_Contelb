@@ -183,6 +183,7 @@ function paginaPost(p) {
     <article class="prosa post-prosa">
       ${figura}
       ${corpoPost}
+      <p class="post-aviso">Conteúdo informativo, de acordo com as regras em vigor em ${p.data.slice(0, 10)}. As normas mudam com frequência, e este texto não substitui a orientação de um contador sobre o seu caso.</p>
       <div class="post-fim">
         ${compartilhar(p)}
         <a class="link-seta" href="/blog/">Ver todos os posts${icone('seta')}</a>

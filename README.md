@@ -70,6 +70,14 @@ Abra `http://localhost:8080`. Um servidor local é necessário porque os links u
 
 ## Pendências para confirmar com a Contelb
 
+Jurídico e LGPD (checklist revisado em 21/10/2026):
+- Preencher razão social, CNPJ e registros no CRC (escritório e responsável técnico) em `gerador/dados.mjs`. Eles aparecem sozinhos no rodapé, na política de privacidade, nos termos de uso e nos dados estruturados.
+- Pedir revisão de um advogado para `/politica-de-privacidade/` e `/termos-de-uso/` antes de publicar.
+- Confirmar autorização dos três clientes citados nos depoimentos (nome e resumo) e, se possível, receber o texto exato.
+- Confirmar a licença das imagens: banner do topo, fotos do blog (uma delas é um quadro de telejornal com logotipo de emissora, e o arquivo original de outra se chamava "adobe_stock") e autorização de imagem das pessoas nas fotos das salas.
+- Confirmar se os textos do blog podem ser republicados no site novo: vários parecem vir de terceiros e do serviço de blog anterior (Sitecontabil). Se for o caso, incluir a fonte em cada post ou trocar por textos próprios.
+- Revisar as promessas de processo das páginas de serviço (prazos, conferências, avisos) para garantir que descrevem a rotina real do escritório.
+
 - Blog: na publicação, o sistema de blog antigo em `public_html/blog` precisa ser desativado ou renomeado, porque o novo site passa a servir os mesmos endereços.
 
 - Horário de atendimento (hoje: "Segunda a sexta, em horário comercial"), em `gerador/dados.mjs`.

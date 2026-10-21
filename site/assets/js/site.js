@@ -336,7 +336,7 @@
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const obrig = ['nome', 'telefone', 'interesse'].map(campo);
+      const obrig = ['nome', 'interesse'].map(campo);   // só o necessário (LGPD): o canal escolhido já identifica quem escreve
       const faltando = obrig.filter((c) => !c.value.trim());
       obrig.forEach((c) => (c.value.trim() ? c.removeAttribute('aria-invalid') : c.setAttribute('aria-invalid', 'true')));
       if (faltando.length) {

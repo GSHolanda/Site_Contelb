@@ -16,6 +16,11 @@ export const EMPRESA = {
   portal: 'https://contelbcontabilidade.app.questorpublico.com.br/Authorize/LogOn',
   responsavel: 'Udenildo Donney Amaral',
   horario: 'Segunda a sexta, em horário comercial',
+  // Dados legais: preencha com os dados oficiais da Contelb. Enquanto estiverem vazios, não aparecem no site.
+  razaoSocial: '',   // ex.: 'Contelb Contabilidade Ltda.'
+  cnpj: '',          // ex.: '00.000.000/0001-00'
+  crc: '',           // registro da organização contábil no CRC-DF, ex.: 'CRC-DF 0000/O'
+  crcResponsavel: '', // registro do responsável técnico, ex.: 'CRC-DF 000000/O'
 };
 
 export const REDES = [
@@ -58,7 +63,7 @@ export const SERVICOS = [
   { url: '/servicos/contabilidade-completa/', nome: 'Contabilidade completa', resumo: 'Balanço, DRE, impostos, folha e fluxo de caixa em dia, com relatórios que você entende.', icone: 'livro' },
   { url: '/servicos/obrigacoes-trabalhistas/', nome: 'Obrigações trabalhistas', resumo: 'Registro, folha, férias, 13º, rescisões, FGTS e INSS calculados e entregues no prazo.', icone: 'pessoas' },
   { url: '/servicos/assessoria-empresarial/', nome: 'Assessoria empresarial', resumo: 'Planejamento, gestão financeira e apoio fiscal para decidir com números na mão.', icone: 'bussola' },
-  { url: '/servicos/migrar-mei-para-me/', nome: 'Migrar de MEI para ME', resumo: 'Seu negócio cresceu. A gente faz a mudança para Microempresa sem susto com o imposto.', icone: 'degrau' },
+  { url: '/servicos/migrar-mei-para-me/', nome: 'Migrar de MEI para ME', resumo: 'Seu negócio cresceu. A gente faz a mudança para Microempresa no prazo certo e com o imposto planejado.', icone: 'degrau' },
   { url: '/planejamento-tributario/', nome: 'Planejamento tributário', resumo: 'Simulação entre Simples, Presumido e Real para pagar só o imposto que a lei exige.', icone: 'balanca' },
   { url: '/recuperacao-de-creditos-tributarios/', nome: 'Recuperação de créditos', resumo: 'Revisão dos últimos cinco anos para recuperar impostos pagos a mais.', icone: 'retorno' },
 ];

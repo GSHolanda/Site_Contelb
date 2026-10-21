@@ -7,7 +7,7 @@ import { SITE, HOJE } from './dados.mjs';
 import { pagina } from './layout.mjs';
 import { home } from './home.mjs';
 import { PAGINAS_SERVICO, paginaServico } from './servicos.mjs';
-import { sobre, servicosHub, contato, privacidade, naoEncontrada } from './outras.mjs';
+import { sobre, servicosHub, contato, privacidade, termos, naoEncontrada } from './outras.mjs';
 import { paginasBlog } from './blog.mjs';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..', 'site');
@@ -23,6 +23,7 @@ const paginas = [
   ...paginasBlog(),
   contato(),
   privacidade(),
+  termos(),
   naoEncontrada(),
 ];
 

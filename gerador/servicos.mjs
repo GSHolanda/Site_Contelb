@@ -4,7 +4,7 @@ import { SITE } from './dados.mjs';
 import { icone, linha, btnWhats, btnLink, topoPagina, faqHtml, passosLinha, ctaFaixa, relacionados, trilhaSchema, faqSchema, servicoSchema } from './layout.mjs';
 
 const DIFERENCIAIS_PADRAO = [
-  ['Desde 1976 no DF', 'Quase cinco décadas atendendo empresas de Brasília, com a experiência de quem já viu muitas mudanças de regra.'],
+  ['Desde 1976 no DF', 'Atendendo empresas de Brasília desde 1976, com a experiência de quem já acompanhou muitas mudanças de regra.'],
   ['Equipe que conhece você', 'Você fala com pessoas que acompanham a sua empresa de perto, não com um atendimento genérico.'],
   ['Tudo no mesmo escritório', 'Contábil, fiscal, trabalhista e tributário conversando entre si, sem informação perdida no caminho.'],
 ];
@@ -161,7 +161,7 @@ export const PAGINAS_SERVICO = [
     nome: 'Migrar de MEI para ME',
     titulo: 'Migrar de MEI para ME em Brasília | Contelb Contabilidade',
     descricao: 'Faturou acima do limite do MEI ou precisa crescer? A Contelb orienta sua migração para ME com regularização, regime tributário e contabilidade completa.',
-    h1: 'Migrar de MEI para ME em Brasília sem susto com o imposto',
+    h1: 'Migrar de MEI para ME em Brasília com o imposto planejado',
     kicker: 'Serviço · MEI em crescimento',
     tipo: 'Migração de MEI para Microempresa',
     msg: 'Olá! Vim pelo site. Sou MEI e quero migrar para Microempresa.',
@@ -200,7 +200,7 @@ export const PAGINAS_SERVICO = [
     documentos: ['Certificado da Condição de Microempreendedor Individual (CCMEI)', 'RG e CPF do titular', 'Comprovante de endereço e IPTU ou código cartográfico do local', 'Relação do faturamento do ano', 'Notas fiscais emitidas no período'],
     faq: [
       ['Perco meu CNPJ ao sair do MEI?', 'Não. O CNPJ continua o mesmo. Mudam o enquadramento, a forma de calcular os impostos e as obrigações da empresa.'],
-      ['Vou pagar mais imposto como Microempresa?', 'O imposto deixa de ser um valor fixo por mês e passa a ser calculado sobre o faturamento. Com planejamento, muitas empresas ficam no Simples Nacional com alíquotas iniciais baixas. A Contelb simula os cenários antes da mudança.'],
+      ['Vou pagar mais imposto como Microempresa?', 'O imposto deixa de ser um valor fixo por mês e passa a ser calculado sobre o faturamento. Dependendo da atividade e do faturamento, a empresa pode ficar no Simples Nacional com alíquotas iniciais baixas. A Contelb simula os cenários antes da mudança.'],
       ['Quando devo comunicar o desenquadramento?', 'Assim que você souber que vai precisar sair do MEI. O prazo depende do motivo, e perder esse prazo pode gerar multa e impostos retroativos.'],
       ['Posso continuar emitindo notas durante a migração?', 'Sim, com orientação. A equipe indica como emitir as notas no período de transição para que tudo fique correto no novo enquadramento.'],
     ],
@@ -364,7 +364,7 @@ export const PAGINAS_SERVICO = [
     tipo: 'Recuperação de créditos tributários',
     msg: 'Olá! Vim pelo site e quero saber se minha empresa tem créditos tributários a recuperar.',
     intro: [
-      'Erro de enquadramento, produto com tributação monofásica cobrado de novo, retenção que nunca foi compensada. Muitas empresas pagam imposto a mais por anos sem perceber.',
+      'Erro de enquadramento, produto com tributação monofásica cobrado de novo, retenção que nunca foi compensada. Pode acontecer de uma empresa pagar imposto a mais por anos sem perceber.',
       'A Contelb revisa as apurações dos últimos cinco anos, identifica pagamentos indevidos e conduz o pedido de restituição ou compensação pelos caminhos previstos na lei.',
     ],
     ficha: [['Período', 'Até cinco anos para trás'], ['Formas', 'Compensação ou restituição'], ['Apoio', 'Especialistas em direito tributário']],

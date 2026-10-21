@@ -1,7 +1,7 @@
 // Moldura compartilhada: <head>, cabeçalho, rodapé, blocos reutilizáveis e dados estruturados.
 import { SITE, HOJE, EMPRESA, REDES, UNIDADES, NAV, SERVICOS, whats } from './dados.mjs';
 
-export const VERSAO = '6';
+export const VERSAO = '7';
 export const OG_PADRAO = `${SITE}/assets/img/og-contelb.jpg`;
 
 export const esc = (s = '') =>
@@ -65,7 +65,7 @@ function cabecalho(atual) {
   return `<a class="pular" href="#main">Pular para o conteúdo</a>
 <header class="topo" id="topo">
   <div class="topo-in">
-    <a class="marca" href="/" aria-label="Contelb Contabilidade, página inicial">${logoMarca('lg-topo')}<span class="marca-txt"><b>Contelb</b><small>Contabilidade e Auditoria</small></span></a>
+    <a class="marca" href="/" aria-label="Contelb Contabilidade e Auditoria, página inicial">${logoMarca('lg-topo')}<span class="marca-txt"><b>Contelb</b> <small>Contabilidade e Auditoria</small></span></a>
     <nav class="menu" id="menu" aria-label="Principal">
       <ul class="menu-lista">${NAV.map(item).join('')}</ul>
       <div class="menu-extra">
@@ -83,6 +83,10 @@ function cabecalho(atual) {
 </header>`;
 }
 
+// Razão social, CNPJ e registros no CRC: só entram quando preenchidos em dados.mjs
+export const dadosLegais = () =>
+  [EMPRESA.razaoSocial, EMPRESA.cnpj && `CNPJ ${EMPRESA.cnpj}`, EMPRESA.crc, EMPRESA.crcResponsavel && `Responsável técnico: ${EMPRESA.responsavel}, ${EMPRESA.crcResponsavel}`].filter(Boolean).join(' · ');
+
 // ---------- Rodapé (NAP completo) ----------
 function rodape() {
   const redes = REDES.map((r) => `<a href="${r.url}" target="_blank" rel="noopener" aria-label="${r.nome} da Contelb">${icone(r.nome.toLowerCase())}</a>`).join('');
@@ -95,7 +99,7 @@ function rodape() {
   ${linha('rodape-linha')}
   <div class="wrap rodape-grade">
     <div class="rodape-marca">
-      <a class="marca marca-clara" href="/" aria-label="Contelb Contabilidade, página inicial">${logoMarca('lg-rodape')}<span class="marca-txt"><b>Contelb</b><small>Contabilidade e Auditoria</small></span></a>
+      <a class="marca marca-clara" href="/" aria-label="Contelb Contabilidade e Auditoria, página inicial">${logoMarca('lg-rodape')}<span class="marca-txt"><b>Contelb</b> <small>Contabilidade e Auditoria</small></span></a>
       <p>Contabilidade, consultoria tributária e assessoria empresarial em Águas Claras, Brasília/DF, desde 1976.</p>
       <div class="redes">${redes}</div>
     </div>
@@ -126,8 +130,8 @@ function rodape() {
   </div>
   <div class="wrap rodape-nap">${unid}</div>
   <div class="wrap rodape-base">
-    <p>© 2026 ${EMPRESA.nome}. Todos os direitos reservados.</p>
-    <p><a href="/politica-de-privacidade/">Política de privacidade</a></p>
+    <p>© 2026 ${EMPRESA.nome}. Todos os direitos reservados.${dadosLegais() ? `<br>${dadosLegais()}` : ''}</p>
+    <p class="rodape-legal"><a href="/politica-de-privacidade/">Política de privacidade</a><a href="/termos-de-uso/">Termos de uso</a></p>
   </div>
 </footer>`;
 }
@@ -154,6 +158,8 @@ export function grafoBase() {
     email: EMPRESA.email,
     telephone: EMPRESA.telefoneSchema,
     foundingDate: EMPRESA.fundacao,
+    ...(EMPRESA.razaoSocial && { legalName: EMPRESA.razaoSocial }),
+    ...(EMPRESA.cnpj && { taxID: EMPRESA.cnpj }),
     address: endereco(UNIDADES[0]),
     sameAs: REDES.filter((r) => r.nome !== 'LinkedIn').map((r) => r.url),
     contactPoint: {
@@ -317,11 +323,11 @@ export function formulario({ id = 'contato-form', titulo = 'Conte o que sua empr
   const opcoes = ['Abrir empresa', 'Trocar de contador', 'Contabilidade completa', 'Obrigações trabalhistas', 'Assessoria empresarial', 'Migrar de MEI para ME', 'Planejamento tributário', 'Recuperação de créditos tributários', 'Outro assunto'];
   return `<form class="form" id="${id}" action="mailto:${EMPRESA.email}" method="post" enctype="text/plain" novalidate data-whats="${EMPRESA.whatsNumero}" data-email="${EMPRESA.email}">
   <${h} class="form-tit">${titulo}</${h}>
-  <p class="form-sub">Responda em um minuto. Ao enviar, o WhatsApp abre com a sua mensagem pronta para a equipe da Contelb.</p>
+  <p class="form-sub">Responda em um minuto. Só nome e assunto são obrigatórios. Ao enviar, o WhatsApp abre com a sua mensagem pronta para a equipe da Contelb.</p>
   <div class="campos">
     <div class="campo"><label for="${id}-nome">Nome</label><input id="${id}-nome" name="nome" type="text" autocomplete="name" required placeholder="Seu nome"></div>
-    <div class="campo"><label for="${id}-tel">Telefone ou WhatsApp</label><input id="${id}-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="(61) 90000-0000"></div>
-    <div class="campo"><label for="${id}-email">E-mail</label><input id="${id}-email" name="email" type="email" autocomplete="email" placeholder="voce@empresa.com.br"></div>
+    <div class="campo"><label for="${id}-tel">Telefone <span class="opc">(opcional)</span></label><input id="${id}-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(61) 90000-0000"></div>
+    <div class="campo"><label for="${id}-email">E-mail <span class="opc">(opcional)</span></label><input id="${id}-email" name="email" type="email" autocomplete="email" placeholder="voce@empresa.com.br"></div>
     <div class="campo"><label for="${id}-empresa">Empresa <span class="opc">(opcional)</span></label><input id="${id}-empresa" name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa ou do projeto"></div>
     <div class="campo campo-cheio"><label for="${id}-interesse">Assunto</label><select id="${id}-interesse" name="interesse" required>
       <option value="">Escolha uma opção</option>
@@ -329,12 +335,12 @@ export function formulario({ id = 'contato-form', titulo = 'Conte o que sua empr
     </select></div>
     <div class="campo campo-cheio"><label for="${id}-msg">Mensagem <span class="opc">(opcional)</span></label><textarea id="${id}-msg" name="mensagem" rows="4" placeholder="Ex.: tenho um comércio no Simples Nacional e quero revisar meus impostos."></textarea></div>
   </div>
-  <p class="form-erro" role="alert" hidden>Preencha nome, telefone e assunto para a gente conseguir responder.</p>
+  <p class="form-erro" role="alert" hidden>Preencha seu nome e o assunto para a gente conseguir responder.</p>
   <div class="form-acoes">
     <button class="btn btn-primario" type="submit">${icone('whatsapp')}<span>Enviar pelo WhatsApp</span></button>
     <a class="link-seta form-email" href="mailto:${EMPRESA.email}">Prefiro enviar por e-mail${icone('seta')}</a>
   </div>
-  <p class="form-nota">Usamos seus dados só para responder ao seu contato. Veja a <a href="/politica-de-privacidade/">política de privacidade</a>.</p>
+  <p class="form-nota">O site não guarda o que você digita: a mensagem segue pelo WhatsApp ou pelo seu e-mail, e a Contelb usa esses dados só para responder ao seu contato. Veja a <a href="/politica-de-privacidade/">política de privacidade</a>.</p>
   <div class="form-ok" role="status" hidden>
     <p class="form-ok-tit">${icone('check')}Mensagem pronta no WhatsApp.</p>
     <p>Se o WhatsApp abriu, é só tocar em enviar por lá. Se não abriu, <a class="form-ok-link" href="#">toque aqui</a> ou ligue para <a href="${EMPRESA.telefoneLink}">${EMPRESA.telefone}</a>.</p>

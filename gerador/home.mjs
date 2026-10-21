@@ -15,7 +15,7 @@ export const FAQ_HOME = [
   ['Quais documentos preciso para abrir uma empresa?', 'Para começar: RG e CPF de cada sócio (pode ser foto ou arquivo digitalizado), comprovante de endereço dos sócios e o código cartográfico ou o IPTU do endereço onde a empresa vai funcionar. Com isso a equipe já consegue consultar a viabilidade e montar o restante com você.'],
   ['Posso registrar a empresa no meu endereço residencial?', 'Em muitos casos, sim, principalmente em atividades que não recebem clientes nem guardam estoque no local. A resposta final vem da consulta de viabilidade, que confere as regras de uso do endereço no DF. A Contelb faz essa consulta antes do registro, para você não ter surpresa depois.'],
   ['Como funciona a troca de contador? Preciso falar com o contador atual?', 'Você comunica a decisão ao seu contador atual, respeitando o aviso do seu contrato. Daí em diante a Contelb assume a conversa: pede os documentos e o termo de transferência, confere o que foi entregue e organiza a transição para a empresa seguir em dia desde o primeiro mês.'],
-  ['A Contelb atende empresas de qualquer região do DF?', 'Sim. A Contelb fica em Águas Claras, com matriz na ADE e filial no DF Plaza Shopping, e atende empresas de Brasília e de todo o Distrito Federal. Boa parte da rotina circula pelo portal do cliente, e sempre que você quiser conversar pessoalmente é recebido em um dos dois endereços.'],
+  ['A Contelb atende empresas de qualquer região do DF?', 'Sim. A Contelb fica em Águas Claras, com matriz na ADE e filial no DF Plaza Shopping, e atende empresas de Brasília e de todo o Distrito Federal. Boa parte da rotina circula pelo portal do cliente e, quando quiser conversar pessoalmente, você pode agendar uma visita em um dos dois endereços.'],
   ['Qual é o melhor regime tributário para a minha empresa?', 'Não existe uma resposta única. Simples Nacional, Lucro Presumido e Lucro Real mudam de acordo com a atividade, o faturamento, a folha de pagamento e a margem de lucro. A Contelb simula os cenários com os números da sua empresa e mostra, lado a lado, quanto você pagaria em cada um.'],
 ];
 
@@ -109,7 +109,7 @@ function hero() {
 
 function confianca() {
   const itens = [
-    ['1976', 'ano de fundação', 'Quase cinco décadas acompanhando empresas do Distrito Federal.'],
+    ['1976', 'ano de fundação', 'Desde 1976 acompanhando empresas do Distrito Federal.'],
     ['600 m²', 'de estrutura própria', 'O Edifício Contelb, na ADE de Águas Claras, é a nossa matriz.'],
     ['2', 'endereços em Águas Claras', 'Matriz na ADE e filial no DF Plaza Shopping, perto de você.'],
     ['4', 'frentes sob o mesmo teto', 'Contábil, fiscal, trabalhista e tributária conversando entre si.'],
@@ -185,7 +185,7 @@ function abrirEmpresa() {
     <div class="abrir-txt rv">
       <p class="kicker">Abrir empresa</p>
       <h2 id="abrir-tit">Abrir empresa em Brasília, com cada etapa explicada</h2>
-      <p class="lede">Uma empresa bem aberta paga menos imposto por anos. Por isso a Contelb começa pela viabilidade e pelo regime tributário, e só depois parte para o registro.</p>
+      <p class="lede">As escolhas feitas na abertura, como o regime tributário, pesam no imposto por anos. Por isso a Contelb começa pela viabilidade e pelo regime tributário, e só depois parte para o registro.</p>
       <div class="acoes">${btnLink('/abrir-empresa-brasilia/', 'Abrir minha empresa', 'btn btn-claro')}${btnWhats('Tirar uma dúvida', 'Olá! Vim pelo site e quero abrir uma empresa.', 'btn btn-contorno-claro')}</div>
     </div>
     <ol class="etapas">
@@ -263,7 +263,7 @@ function depoimentos() {
   const itens = [
     ['Bid Vilas Boas', 'BV', 'Cliente desde 2011', 'Destaca a parceria de longa data com a Contelb e a sensação de ter a empresa protegida, com confiança construída ao longo dos anos.'],
     ['Breno Pessoa', 'BP', 'Cliente Contelb', 'Elogia os profissionais qualificados e atenciosos, e conta que o planejamento tributário e a recuperação de tributos fizeram diferença para a empresa.'],
-    ['Priscylla Antonelli', 'PA', 'Instituto Acontecer', 'Fala do cuidado da equipe, que resolveu problemas deixados por um atendimento anterior e apoia o Instituto Acontecer no dia a dia.'],
+    ['Priscylla Antonelli', 'PA', 'Cliente Contelb', 'Fala do cuidado da equipe, que resolveu problemas deixados por um atendimento anterior e apoia o Instituto Acontecer no dia a dia.'],
   ];
   const mapa = UNIDADES[0].mapa;
   return `<section class="secao depoimentos" aria-labelledby="dep-tit">
@@ -273,7 +273,7 @@ function depoimentos() {
         <p class="kicker">Clientes</p>
         <h2 id="dep-tit">O que os clientes destacam na Contelb</h2>
       </div>
-      <p class="lede">Resumo das avaliações de clientes. Os textos completos estão no Google. <a class="link-seta" href="${mapa}" target="_blank" rel="noopener">Ver avaliações${icone('seta')}</a></p>
+      <p class="lede">Resumo do que clientes contaram sobre o trabalho da Contelb. <a class="link-seta" href="${mapa}" target="_blank" rel="noopener">Ver a Contelb no Google${icone('seta')}</a></p>
     </div>
     <ul class="deps">
       ${itens.map(([n, ini, rot, t], i) => `<li class="dep rv" style="--i:${i}">
