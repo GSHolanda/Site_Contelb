@@ -4,6 +4,14 @@ Novo site institucional da Contelb Contabilidade (Águas Claras, Brasília/DF), 
 
 Arquivos estáticos puros: HTML, CSS e JavaScript sem framework e sem dependências. A pasta `site/` é exatamente o que vai para o `public_html` da hospedagem.
 
+## Demonstração visual
+
+**Site no ar:** [mellow-meerkat-53f3de.netlify.app](https://mellow-meerkat-53f3de.netlify.app/)
+
+| Página inicial | Serviços | Contato |
+|:---:|:---:|:---:|
+| ![Página inicial do site da Contelb](docs/images/home.png) | ![Página de serviços do site da Contelb](docs/images/servicos.png) | ![Página de contato do site da Contelb](docs/images/contato.png) |
+
 ## Tecnologias utilizadas
 
 - **HTML5, CSS3 e JavaScript** puros, sem framework e sem dependências, no site publicado (pasta `site/`).
