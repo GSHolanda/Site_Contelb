@@ -4,6 +4,14 @@ Novo site institucional da Contelb Contabilidade (Águas Claras, Brasília/DF), 
 
 Arquivos estáticos puros: HTML, CSS e JavaScript sem framework e sem dependências. A pasta `site/` é exatamente o que vai para o `public_html` da hospedagem.
 
+## Tecnologias utilizadas
+
+- **HTML5, CSS3 e JavaScript** puros, sem framework e sem dependências, no site publicado (pasta `site/`).
+- **Node.js** (sem dependências) no gerador de páginas (pasta `gerador/`).
+- **Apache (`.htaccess`)** para HTTPS, redirecionamentos 301 e cache; publicação por FTP na **HostGator** (`publicar.sh`) e configuração para **Netlify** (`netlify.toml`).
+- **JSON-LD, Open Graph e sitemap** para SEO local.
+- **PowerShell** no servidor local de pré-visualização para Windows (`ver-site.ps1`).
+
 ## Estrutura
 
 ```
