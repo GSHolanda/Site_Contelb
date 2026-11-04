@@ -91,17 +91,17 @@ O Netlify só mostra arquivos prontos; na KingHost o blog é montado pelo PHP a 
 
 ## Publicar (KingHost)
 
-Domínio `contelb.com.br`, FTP `ftp.contelb.com.br` (alternativo: `web10f33.kinghost.net`), usuário `contelb`, pasta pública `www`. O subdomínio `wd.contelb.com.br` mora em `www/wd/` e não é tocado pelos scripts nem pelas regras do `.htaccess` (todas valem só para `contelb.com.br` e `www.contelb.com.br`).
+Domínio `contelb.com.br`, FTP `web10f33.kinghost.net` (o certificado do FTP não vale para `ftp.contelb.com.br`), usuário `contelb`, pasta pública `www`. O FTP entra em `/www`, e a raiz fica um nível acima (`/home/contelb` no servidor); por isso os scripts usam caminhos absolutos. As regras do `.htaccess` valem só para `contelb.com.br` e `www.contelb.com.br`, então não afetam subdomínios como `wd.contelb.com.br`. Os scripts não movem nenhum item chamado `wd`, mas em 04/11/2026 não existia pasta `www/wd`.
 
 1. Copie `kinghost.env.exemplo` para `kinghost.env`. Esse arquivo está no `.gitignore` e nunca vai para o Git. A senha do FTP pode ficar em branco: nesse caso ela é pedida na tela a cada uso.
 2. No Windows, dê dois cliques em `publicar.bat` e escolha a opção. No Mac/Linux, use `./publicar.sh <opção>`.
    1. **Listar**: só mostra o que existe hoje no FTP. Não muda nada.
    2. **Mover o site antigo para a reserva**: move tudo o que está na `www` (menos `wd` e `.well-known`) para `/www_antigo_AAAAMMDD-HHMM`, fora do site público. Inclui o blog antigo da Sitecontabil e as páginas `.php`. Nada é apagado. Pede para digitar `MOVER`.
-   3. **Publicar**: envia `site/` para a `www`, inclusive o `.htaccess`, menos `site/blog/` (cópia estática usada só no Netlify). Pede para digitar `PUBLICAR`.
+   3. **Publicar**: envia `site/` para a `www`, inclusive o `.htaccess`, menos `site/blog/` (cópia estática usada só no Netlify). Pede para digitar `PUBLICAR`. No Windows, o script também confere o tamanho de cada arquivo no servidor e reenvia os que chegaram diferentes, até 3 tentativas.
    4. **Criar código de instalação** das contas do painel (veja acima).
-3. Limpe o cache (Varnish) no painel da KingHost e teste em uma janela anônima: a página inicial, `/blog/`, um artigo, `/admin/`, `wd.contelb.com.br` e um endereço antigo, como `/sobre-nos.php` (deve ir para `/sobre/`).
+3. Se o Varnish estiver ativo no painel da KingHost, limpe o cache. Em 04/11/2026 ele estava desativado: não clique em "Ativar", porque isso redefine as entradas de DNS. Depois teste em uma janela anônima: a página inicial, `/blog/`, um artigo, `/admin/`, `wd.contelb.com.br` e um endereço antigo, como `/sobre-nos.php` (deve ir para `/sobre/`).
 
-A conexão FTP é sempre protegida (TLS). Os scripts não apagam nada no servidor: só criam pastas, enviam arquivos e movem itens com confirmação.
+A conexão FTP é sempre protegida (TLS). No Windows, o `publicar.ps1` limita a conexão ao TLS 1.2: com TLS 1.3, o curl do Windows cortou arquivos no envio sem avisar erro. Os scripts não apagam nada no servidor: só criam pastas, enviam arquivos e movem itens com confirmação.
 
 **Para voltar atrás:** no WebFTP da KingHost, mova os itens da `www` (menos `wd`) para uma pasta nova, como `www_novo`, e devolva para a `www` os itens da pasta `www_antigo_...`. O backup completo da hospedagem (já feito) só deve ser restaurado em último caso.
 

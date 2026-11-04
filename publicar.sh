@@ -12,7 +12,7 @@ parar() { echo "$1" >&2; exit 1; }
 
 [ -f "$RAIZ/kinghost.env" ] || parar "Falta o arquivo kinghost.env. Copie kinghost.env.exemplo para kinghost.env e preencha o usuário (a senha pode ficar em branco)."
 ler() { sed -n "s/^[[:space:]]*$1[[:space:]]*=[[:space:]]*//p" "$RAIZ/kinghost.env" | tail -1 | sed 's/[[:space:]]*$//'; }
-SERVIDOR="$(ler KH_HOST)"; SERVIDOR="${SERVIDOR:-ftp.contelb.com.br}"
+SERVIDOR="$(ler KH_HOST)"; SERVIDOR="${SERVIDOR:-web10f33.kinghost.net}"
 USUARIO="$(ler KH_USUARIO)"; USUARIO="${USUARIO:-contelb}"
 SENHA="$(ler KH_SENHA)"
 TLS="$(ler KH_TLS)"   # "nao" só se a KingHost recusar conexão protegida
@@ -37,7 +37,9 @@ ftp() {
     *) parar "O FTP respondeu com erro (código $cod do curl)." ;;
   esac
 }
-url() { echo "url = $(aspas "$ESQUEMA://$SERVIDOR/$1")"; }
+# Na KingHost o FTP entra em /www, não na raiz. Por isso todos os caminhos são absolutos:
+# nas URLs, a barra dupla (ftp://servidor//www/) parte da raiz; nos comandos MKD, RNFR e RNTO, a barra inicial faz o mesmo.
+url() { echo "url = $(aspas "$ESQUEMA://$SERVIDOR//$1")"; }
 
 case "$ACAO" in
 
@@ -55,8 +57,8 @@ reserva)
   echo "Continuam na www: wd, .well-known"
   echo "Durante a troca o site fica fora do ar por alguns minutos, até a publicação do site novo."
   read -rp "Para confirmar, digite MOVER: " OK; [ "$OK" = MOVER ] || parar "Cancelado. Nada foi movido."
-  CMDS=("quote = $(aspas "MKD $DESTINO")")
-  for i in "${ITENS[@]}"; do CMDS+=("quote = $(aspas "RNFR www/$i")" "quote = $(aspas "RNTO $DESTINO/$i")"); done
+  CMDS=("quote = $(aspas "MKD /$DESTINO")")
+  for i in "${ITENS[@]}"; do CMDS+=("quote = $(aspas "RNFR /www/$i")" "quote = $(aspas "RNTO /$DESTINO/$i")"); done
   ftp "$(url '')" list-only "${CMDS[@]}" > /dev/null
   echo "Pronto. O site antigo está guardado em /$DESTINO (inclusive o blog antigo)."
   echo "Para voltar atrás: no WebFTP da KingHost, mova os itens dessa pasta de volta para a www."
@@ -72,9 +74,9 @@ publicar)
   read -rp "Para confirmar, digite PUBLICAR: " OK; [ "$OK" = PUBLICAR ] || parar "Cancelado. Nada foi enviado."
   LINHAS=(ftp-create-dirs 'write-out = "enviado %{url_effective}\n"')
   for a in "${ARQS[@]}"; do LINHAS+=("upload-file = $(aspas "$SITE/$a")" "$(url "www/$a")"); done
-  ftp "${LINHAS[@]}" | sed "s#$ESQUEMA://$SERVIDOR/www/#  #"
-  ftp "$(url '')" list-only "quote = $(aspas '*MKD dados-blog')" > /dev/null
-  echo; echo "Publicado. Agora limpe o cache (Varnish) no painel da KingHost e teste em uma janela anônima."
+  ftp "${LINHAS[@]}" | sed "s#$ESQUEMA://$SERVIDOR//www/#  #"
+  ftp "$(url '')" list-only "quote = $(aspas '*MKD /dados-blog')" > /dev/null
+  echo; echo "Publicado. Se o Varnish estiver ativo no painel da KingHost, limpe o cache. Depois teste em uma janela anônima."
   ;;
 
 instalar)

@@ -8,7 +8,7 @@ Site institucional novo da Contelb Contabilidade (Águas Claras, Brasília/DF), 
 
 - Repositório: `GSHolanda/Site_Contelb`, branch de trabalho `claude/blissful-ritchie-hoeolc`.
 - Pré-visualização: https://mellow-meerkat-53f3de.netlify.app/ (Netlify publica a pasta `site/` a cada push no GitHub; tem `noindex` para não competir com o site oficial).
-- Site oficial: `www.contelb.com.br`, que vai para a **KingHost** (não HostGator). Ainda não foi publicado.
+- Site oficial: `www.contelb.com.br`, na **KingHost** (não HostGator). Publicado em 04/11/2026.
 - O chefe do usuário aprovou o site e o blog; pode haver reunião de ajustes.
 
 ## Arquitetura
@@ -36,7 +36,9 @@ A segurança do painel está no README, na seção "Blog e painel na KingHost".
   - post novo no topo da lista e no sitemap, edição e rascunho escondido;
   - dados fora do público, troca de senha, sair e limite de tentativas.
 - Painel no navegador (Playwright): login, lista dos 15 posts e editor carregando, sem erros de console.
-- `publicar.sh` contra um servidor FTP local: listar, cancelar, mover para a reserva, publicar (a `www` ficou idêntica a `site/`), republicar, instalar, senha errada e TLS recusado. O `publicar.ps1` usa as mesmas opções do curl, mas **não pôde ser executado aqui** (não há PowerShell no ambiente). Teste-o primeiro com a opção 1 (listar), que não muda nada.
+- `publicar.sh` contra um servidor FTP local: listar, cancelar, mover para a reserva, publicar (a `www` ficou idêntica a `site/`), republicar, instalar, senha errada e TLS recusado. Esse teste é anterior aos caminhos absolutos; a versão atual do `publicar.sh` só passou na checagem de sintaxe.
+- `publicar.ps1` no Windows contra a KingHost real, em 04/11/2026: listar, mover para a reserva, publicar e instalar. A primeira publicação cortou 37 de 70 arquivos conferidos, sem erro do curl. Com `tls-max 1.2`, os 80 arquivos chegaram com o tamanho certo, e os 70 públicos ficaram idênticos aos locais.
+- Site no ar, em 04/11/2026: endereços, 301s, bloqueios e certificados conferidos com curl; página inicial, blog e contato vistos em janela anônima pelo usuário. Criação de conta no painel feita. Login em `/admin/` e e-mail ainda não confirmados.
 - SEO: Lighthouse SEO 100 e axe sem violações (nas rodadas anteriores).
 
 ## Regras de segurança combinadas com o usuário (valem sempre)
@@ -52,38 +54,35 @@ A segurança do painel está no README, na seção "Blog e painel na KingHost".
 ## Dados da KingHost (sem senhas)
 
 - Painel: painel.kinghost.com.br, domínio contelb.com.br, plano Hospedagem III.
-- FTP: `ftp.contelb.com.br` (ou `web10f33.kinghost.net`), porta 21, usuário `contelb`, raiz `/home/contelb`, pasta pública `www`. Se o WebFTP mostrar "Ip_nao_liberado", liberar o IP em Política de IPs.
+- FTP: `web10f33.kinghost.net`, porta 21, usuário `contelb`. O certificado (`*.kinghost.net`) não vale para `ftp.contelb.com.br`. O login entra em `/www`; a raiz do FTP fica um nível acima (`/home/contelb` no servidor) e contém a `www`. Se o WebFTP mostrar "Ip_nao_liberado", liberar o IP em Política de IPs.
+- Varnish: desativado em 04/11/2026, sem cache para limpar. Não clicar em "Ativar": o painel avisa que isso redefine as entradas de DNS.
 - PHP 8.2. MySQL 5.6 com as bases contelb, contelb04 e contelb05: **não apagar** (o site novo não usa banco).
-- Subdomínio `wd.contelb.com.br` em `www/wd/`: não pode ser apagado nem quebrado. O `avaliacao.contelb.com.br` existe no DNS e não no painel: perguntar ao usuário o que é.
-- SSL Let's Encrypt ativo para contelb.com.br e wd até 20/01/2027. Conferir se `www` está coberto.
+- Subdomínio `wd.contelb.com.br`: já respondia 404 antes da troca e continua igual (mesmo conteúdo). Não existe pasta `www/wd`. O único `wd` encontrado é um WordPress sem configuração, que estava em `www/bkp-site/wd/` e hoje está na reserva. Ninguém confirmou se o subdomínio ainda é usado.
+- `avaliacao.contelb.com.br`: existe no DNS e não no painel, e o usuário não sabe o que é. Hoje mostra o site novo, sem redirecionar para o `www`.
+- SSL Let's Encrypt ativo até 20/01/2027, cobrindo `contelb.com.br` e `*.contelb.com.br`.
 - Backup completo já feito (site, 3 bancos e 26 caixas de e-mail). Não refazer nem pagar outro.
+
+## Onde está cada cópia
+
+- Site novo no ar: `/www` na KingHost.
+- Artigos e contas do blog: `/dados-blog` na KingHost, fora do site público (sem cópia no Git).
+- Site antigo: `/www_antigo_20261104-1701` na KingHost, com 23 itens, inclusive `bkp-site` e o blog antigo.
+- No computador do usuário: backup completo em `Downloads\backup contelb\contelb.com.br.tar` e cópia da `bkp-site` em `Downloads\backup contelb\bkp-site-copia\bkp-site`.
 
 ## Próximos passos (em ordem)
 
-1. Confirmar com o usuário, uma pergunta por vez:
-   - se o `kinghost.env` está pronto no computador dele;
-   - o que é o `avaliacao.contelb.com.br`;
-   - se o `wd` fica como está;
-   - se o conteúdo de `/wd/` pode continuar dentro da `www`.
-2. No Windows do usuário: `git pull` e depois o `publicar.bat`:
-   1. opção 1, listar, para conferir o que existe;
-   2. opção 2, mover o site antigo para a reserva (inclui o blog antigo da Sitecontabil e os `.php`);
-   3. opção 3, publicar;
-   4. opção 4, código de instalação e depois criar as contas em `/admin/instalar.php`.
-3. Limpar o Varnish no painel da KingHost e testar em janela anônima:
-   - a página inicial, `/blog/`, um artigo, `/admin/` e o login;
-   - `/sobre-nos.php` deve dar 301 para `/sobre/`;
-   - `wd.contelb.com.br`;
-   - os cadeados (http, https, com e sem www);
-   - envio e recebimento de e-mail.
-4. Search Console: enviar `https://www.contelb.com.br/sitemap.xml` e `/blog/sitemap.xml`.
-5. Depois de alguns dias estável, oferecer a limpeza da pasta `www_antigo_*`, só com confirmação.
+1. O usuário confere o login em `/admin/` e os 15 artigos.
+2. O usuário testa o envio e o recebimento de um e-mail `@contelb.com.br`.
+3. Perguntar se alguém usa `wd.contelb.com.br` e `avaliacao.contelb.com.br`.
+4. Segunda conta do painel, se quiserem: rodar a opção 4 e preencher **as duas contas**, porque as anteriores são substituídas.
+5. Opcional: no Search Console, enviar `https://www.contelb.com.br/sitemap.xml` e `https://www.contelb.com.br/blog/sitemap.xml`.
+6. Depois de alguns dias estável, oferecer a limpeza da pasta `www_antigo_*`, só com confirmação.
 
-**Para voltar atrás:** no WebFTP, mover o conteúdo novo da `www` (menos `wd`) para outra pasta e devolver os itens de `www_antigo_*`.
+**Para voltar atrás:** no WebFTP, mover o conteúdo novo da `www` para outra pasta e devolver os itens de `www_antigo_*`.
 
-## Pendências de conteúdo antes de ir ao ar
+## Pendências de conteúdo
 
-A lista completa está no final do README:
+O usuário decidiu publicar com estes pontos em aberto, para resolver depois. A lista completa está no final do README:
 
 - razão social, CNPJ e CRC em `gerador/dados.mjs` (hoje vazios);
 - revisão de advogado da política de privacidade e dos termos;

@@ -16,7 +16,7 @@ $envArq = Join-Path $raiz 'kinghost.env'
 if (-not (Test-Path $envArq)) { Parar 'Falta o arquivo kinghost.env. Copie kinghost.env.exemplo para kinghost.env e preencha o usuario (a senha pode ficar em branco).' }
 $cfg = @{}
 foreach ($linha in Get-Content $envArq) { if ($linha -match '^\s*([A-Z_]+)\s*=\s*(.*?)\s*$') { $cfg[$matches[1]] = $matches[2] } }
-$servidor = if ($cfg['KH_HOST']) { $cfg['KH_HOST'] } else { 'ftp.contelb.com.br' }
+$servidor = if ($cfg['KH_HOST']) { $cfg['KH_HOST'] } else { 'web10f33.kinghost.net' }
 $usuario = if ($cfg['KH_USUARIO']) { $cfg['KH_USUARIO'] } else { 'contelb' }
 $senha = $cfg['KH_SENHA']
 $tls = if ($cfg['KH_TLS'] -eq 'nao') { @() } else { @('ssl-reqd') }   # "nao" so se a KingHost recusar conexao protegida
@@ -43,11 +43,15 @@ if (-not $senha) {
 
 function Aspas([string]$s) { '"' + $s.Replace('\', '\\').Replace('"', '\"') + '"' }
 
+# Na KingHost o FTP entra em /www, nao na raiz. Por isso todos os caminhos sao absolutos:
+# nas URLs, a barra dupla (ftp://servidor//www/) parte da raiz; nos comandos MKD, RNFR e RNTO, a barra inicial faz o mesmo.
+
 # Roda o curl lendo a configuracao pela entrada padrao: a senha nao aparece na linha de comando nem fica gravada em disco.
 # Os arquivos sao enviados com caminho relativo, para nao depender de acentos no nome da pasta do Windows.
 $OutputEncoding = New-Object Text.UTF8Encoding $false
 function Ftp([string[]]$linhas) {
-  $conteudo = @("user = $(Aspas "${usuario}:$senha")", 'ssl-no-revoke', 'silent', 'show-error', 'connect-timeout = 30') + $tls + $linhas
+  # tls-max 1.2: com TLS 1.3, o curl do Windows (Schannel) cortou arquivos no envio, sem avisar erro, em multiplos de 16 KB
+  $conteudo = @("user = $(Aspas "${usuario}:$senha")", 'ssl-no-revoke', 'silent', 'show-error', 'connect-timeout = 30', 'tls-max = "1.2"') + $tls + $linhas
   $saida = $conteudo | & $curl.Source --config -
   $cod = $LASTEXITCODE
   if ($cod -eq 60) { Parar "O certificado do FTP nao confere com $servidor. Troque KH_HOST no kinghost.env para web10f33.kinghost.net e tente de novo." }
@@ -67,14 +71,14 @@ switch ($Acao) {
 
   'listar' {
     Write-Host "`nRaiz do FTP ($servidor):" -ForegroundColor Cyan
-    Ftp @("url = $(Aspas "ftp://$servidor/")", 'request = "LIST -a"') | Write-Host
+    Ftp @("url = $(Aspas "ftp://$servidor//")", 'request = "LIST -a"') | Write-Host
     Write-Host "`nPasta www (o que aparece no site):" -ForegroundColor Cyan
-    Ftp @("url = $(Aspas "ftp://$servidor/www/")", 'request = "LIST -a"') | Write-Host
+    Ftp @("url = $(Aspas "ftp://$servidor//www/")", 'request = "LIST -a"') | Write-Host
   }
 
   'reserva' {
     $manter = 'wd', '.well-known'
-    $itens = @(Nomes 'www/' | Where-Object { $manter -notcontains $_ })
+    $itens = @(Nomes '/www/' | Where-Object { $manter -notcontains $_ })
     if (-not $itens) { Write-Host 'A pasta www ja esta vazia (fora wd). Nada para mover.'; break }
     $destino = 'www_antigo_' + (Get-Date -Format 'yyyyMMdd-HHmm')
     Write-Host "`nEstes itens da www vao ser MOVIDOS (nada e apagado) para /$destino, fora do site publico:" -ForegroundColor Yellow
@@ -82,9 +86,9 @@ switch ($Acao) {
     Write-Host "Continuam na www: $($manter -join ', ')" -ForegroundColor Yellow
     Write-Host 'Durante a troca o site fica fora do ar por alguns minutos, ate a publicacao do site novo.'
     if ((Read-Host 'Para confirmar, digite MOVER') -cne 'MOVER') { Parar 'Cancelado. Nada foi movido.' }
-    $cmds = @("quote = $(Aspas "MKD $destino")")
-    foreach ($i in $itens) { $cmds += "quote = $(Aspas "RNFR www/$i")"; $cmds += "quote = $(Aspas "RNTO $destino/$i")" }
-    Ftp (@("url = $(Aspas "ftp://$servidor/")", 'list-only') + $cmds) | Out-Null
+    $cmds = @("quote = $(Aspas "MKD /$destino")")
+    foreach ($i in $itens) { $cmds += "quote = $(Aspas "RNFR /www/$i")"; $cmds += "quote = $(Aspas "RNTO /$destino/$i")" }
+    Ftp (@("url = $(Aspas "ftp://$servidor//")", 'list-only') + $cmds) | Out-Null
     Write-Host "Pronto. O site antigo esta guardado em /$destino (inclusive o blog antigo)." -ForegroundColor Green
     Write-Host 'Para voltar atras: no WebFTP da KingHost, mova os itens dessa pasta de volta para a www.'
   }
@@ -100,16 +104,37 @@ switch ($Acao) {
     Write-Host "`nVou enviar $($arquivos.Count) arquivos de site\ para a pasta www de $servidor." -ForegroundColor Yellow
     Write-Host 'Arquivos com o mesmo nome na www serao substituidos. A pasta wd nao e tocada.'
     if ((Read-Host 'Para confirmar, digite PUBLICAR') -cne 'PUBLICAR') { Parar 'Cancelado. Nada foi enviado.' }
-    $linhas = @('ftp-create-dirs', 'write-out = "enviado %{url_effective}\n"')
-    foreach ($a in $arquivos) {
-      $rel = $a.FullName.Substring($site.Length + 1).Replace('\', '/')
-      $linhas += "upload-file = $(Aspas $rel)"
-      $linhas += "url = $(Aspas "ftp://$servidor/www/$rel")"
+    # Envia, confere o tamanho de cada arquivo no servidor e reenvia os que chegaram diferentes (ate 3 tentativas)
+    $pendentes = @($arquivos)
+    for ($tentativa = 1; $tentativa -le 3 -and $pendentes.Count -gt 0; $tentativa++) {
+      Write-Host "`nTentativa ${tentativa}: enviando $($pendentes.Count) arquivos..." -ForegroundColor Cyan
+      $linhas = @('ftp-create-dirs', 'write-out = "enviado %{url_effective}\n"')
+      foreach ($a in $pendentes) {
+        $rel = $a.FullName.Substring($site.Length + 1).Replace('\', '/')
+        $linhas += "upload-file = $(Aspas $rel)"
+        $linhas += "url = $(Aspas "ftp://$servidor//www/$rel")"
+      }
+      Push-Location $site
+      try { Ftp $linhas | ForEach-Object { Write-Host $_.Replace("ftp://$servidor//www/", '  ') } } finally { Pop-Location }
+      $tamanhos = @{}
+      $pastas = @($arquivos | ForEach-Object { $_.DirectoryName.Substring($site.Length).Replace('\', '/') } | Sort-Object -Unique)
+      foreach ($p in $pastas) {
+        Ftp @("url = $(Aspas "ftp://$servidor//www$p/")", 'request = "LIST -a"') | ForEach-Object {
+          if ($_ -match '^-\S+\s+\d+\s+\S+\s+\S+\s+(\d+)\s+\S+\s+\S+\s+\S+\s+(.+?)\s*$') { $tamanhos["$p/$($matches[2])"] = [long]$matches[1] }
+        }
+      }
+      $pendentes = @($arquivos | Where-Object { $tamanhos[$_.FullName.Substring($site.Length).Replace('\', '/')] -ne $_.Length })
+      if ($pendentes.Count -gt 0) {
+        Write-Host "Chegaram com tamanho diferente: $($pendentes.Count) arquivos." -ForegroundColor Yellow
+      }
     }
-    Push-Location $site
-    try { Ftp $linhas | ForEach-Object { Write-Host $_.Replace("ftp://$servidor/www/", '  ') } } finally { Pop-Location }
-    Ftp @("url = $(Aspas "ftp://$servidor/")", 'list-only', "quote = $(Aspas '*MKD dados-blog')") | Out-Null
-    Write-Host "`nPublicado. Agora limpe o cache (Varnish) no painel da KingHost e teste em uma janela anonima." -ForegroundColor Green
+    if ($pendentes.Count -gt 0) {
+      $pendentes | ForEach-Object { Write-Host "  $($_.FullName.Substring($site.Length + 1))" -ForegroundColor Red }
+      Parar 'A publicacao NAO terminou: os arquivos acima continuam diferentes no servidor.'
+    }
+    Write-Host "`nConferido: $($arquivos.Count) arquivos com o tamanho certo no servidor." -ForegroundColor Green
+    Ftp @("url = $(Aspas "ftp://$servidor//")", 'list-only', "quote = $(Aspas '*MKD /dados-blog')") | Out-Null
+    Write-Host "`nPublicado. Se o Varnish estiver ativo no painel da KingHost, limpe o cache. Depois teste em uma janela anonima." -ForegroundColor Green
   }
 
   'instalar' {
@@ -120,7 +145,7 @@ switch ($Acao) {
     Push-Location $raiz
     try {
       [IO.File]::WriteAllText((Join-Path $raiz 'instalar.codigo.tmp'), $codigo, (New-Object Text.UTF8Encoding $false))
-      Ftp @('ftp-create-dirs', 'upload-file = "instalar.codigo.tmp"', "url = $(Aspas "ftp://$servidor/dados-blog/instalar.codigo")") | Out-Null
+      Ftp @('ftp-create-dirs', 'upload-file = "instalar.codigo.tmp"', "url = $(Aspas "ftp://$servidor//dados-blog/instalar.codigo")") | Out-Null
     } finally { Remove-Item (Join-Path $raiz 'instalar.codigo.tmp') -Force -ErrorAction SilentlyContinue; Pop-Location }
     Write-Host "`nCodigo de instalacao (vale 24 horas e so pode ser usado uma vez):" -ForegroundColor Cyan
     Write-Host "  $codigo" -ForegroundColor White
