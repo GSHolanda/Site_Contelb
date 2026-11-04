@@ -31,13 +31,16 @@ AddDefaultCharset UTF-8
 
   # URLs do site antigo (.php) vão direto para as novas, com 301 para manter o SEO
   RewriteRule ^index\.php$ https://www.contelb.com.br/ [R=301,L]
-  RewriteRule ^sobre-nos\.php$ https://www.contelb.com.br/sobre/ [R=301,L]
-  RewriteRule ^abrir-empresa\.php$ https://www.contelb.com.br/abrir-empresa-brasilia/ [R=301,L]
+  RewriteRule ^sobre-nos(\.php)?/?$ https://www.contelb.com.br/sobre/ [R=301,L]
+  RewriteRule ^abrir-empresa(\.php)?/?$ https://www.contelb.com.br/abrir-empresa-brasilia/ [R=301,L]
   RewriteRule ^trocar-de-contador\.php$ https://www.contelb.com.br/trocar-de-contador/ [R=301,L]
-  RewriteRule ^s-contabilidade\.php$ https://www.contelb.com.br/servicos/contabilidade-completa/ [R=301,L]
-  RewriteRule ^s-trabalhista\.php$ https://www.contelb.com.br/servicos/obrigacoes-trabalhistas/ [R=301,L]
-  RewriteRule ^s-assessoria\.php$ https://www.contelb.com.br/servicos/assessoria-empresarial/ [R=301,L]
-  RewriteRule ^s-meime\.php$ https://www.contelb.com.br/servicos/migrar-mei-para-me/ [R=301,L]
+  RewriteRule ^s-contabilidade(\.php)?/?$ https://www.contelb.com.br/servicos/contabilidade-completa/ [R=301,L]
+  RewriteRule ^s-trabalhista(\.php)?/?$ https://www.contelb.com.br/servicos/obrigacoes-trabalhistas/ [R=301,L]
+  RewriteRule ^s-assessoria(\.php)?/?$ https://www.contelb.com.br/servicos/assessoria-empresarial/ [R=301,L]
+  RewriteRule ^s-meime(\.php)?/?$ https://www.contelb.com.br/servicos/migrar-mei-para-me/ [R=301,L]
+  # A página antiga era sobre tributação para desenvolvedores; o site novo não tem uma igual, e esta é a mais próxima
+  RewriteRule ^tributacao(\.php)?/?$ https://www.contelb.com.br/planejamento-tributario/ [R=301,L]
+  RewriteRule ^servicos\.php$ https://www.contelb.com.br/servicos/ [R=301,L]
   RewriteRule ^blog/pagina/?$ https://www.contelb.com.br/blog/ [R=301,L]
   RewriteRule ^contato\.php$ https://www.contelb.com.br/contato/ [R=301,L]
   RewriteRule ^area-do-cliente/?$ https://contelbcontabilidade.app.questorpublico.com.br/Authorize/LogOn [R=302,L]
