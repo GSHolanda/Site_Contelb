@@ -8,7 +8,7 @@ import { pagina } from './layout.mjs';
 import { home } from './home.mjs';
 import { PAGINAS_SERVICO, paginaServico } from './servicos.mjs';
 import { sobre, servicosHub, contato, privacidade, termos, naoEncontrada } from './outras.mjs';
-import { paginasBlog } from './blog.mjs';
+import { paginasBlog, exportarParaPHP } from './blog.mjs';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..', 'site');
 
@@ -35,15 +35,26 @@ for (const p of paginas) {
   console.log('gerado', arquivo);
 }
 
+// Blog na KingHost: dados e molde para o PHP (site/_blog/, pasta protegida no servidor)
+const php = exportarParaPHP();
+mkdirSync(join(RAIZ, '_blog'), { recursive: true });
+const molde = pagina({ url: '/blog/__ROTA__', titulo: '__TITULO__', descricao: '__DESCRICAO__', corpo: '__CORPO__', og: '__OGIMAGE__', ogTipo: '__OGTIPO__', classe: '__CLASSE__', schema: [] })
+  .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, '<script type="application/ld+json">__SCHEMA__</script>');
+writeFileSync(join(RAIZ, '_blog', 'molde.html'), molde, 'utf8');
+const { posts: postsIniciais, ...moldes } = php;
+writeFileSync(join(RAIZ, '_blog', 'moldes.json'), JSON.stringify({ ...moldes, hoje: HOJE }, null, 1), 'utf8');
+writeFileSync(join(RAIZ, '_blog', 'posts-iniciais.json'), JSON.stringify(postsIniciais, null, 1), 'utf8');
+
+// O blog tem sitemap próprio, servido pelo PHP (/blog/sitemap.xml), que inclui os posts novos do painel
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${paginas
-  .filter((p) => !p.noindex)
+  .filter((p) => !p.noindex && !p.url.startsWith('/blog/'))
   .map((p) => `  <url><loc>${SITE}${p.url}</loc><lastmod>${HOJE}</lastmod><priority>${p.prioridade || '0.5'}</priority></url>`)
   .join('\n')}
 </urlset>
 `;
 writeFileSync(join(RAIZ, 'sitemap.xml'), sitemap, 'utf8');
 
-writeFileSync(join(RAIZ, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`, 'utf8');
+writeFileSync(join(RAIZ, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE}/sitemap.xml\nSitemap: ${SITE}/blog/sitemap.xml\n`, 'utf8');
 console.log(`ok: ${paginas.length} páginas, sitemap.xml e robots.txt`);

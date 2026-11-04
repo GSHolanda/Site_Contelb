@@ -1,12 +1,33 @@
-# Contelb Contabilidade: configuração do Apache (HostGator)
+# Contelb Contabilidade: configuração do Apache (KingHost)
+# Este arquivo fica na raiz da pasta www. O subdomínio wd.contelb.com.br mora em www/wd/,
+# então tudo aqui foi escrito para valer SÓ para contelb.com.br e www.contelb.com.br.
 
-Options -Indexes
-DirectoryIndex index.html
+# index.php continua aceito para não quebrar o wd e outras pastas antigas
+DirectoryIndex index.html index.php
 ErrorDocument 404 /404.html
 AddDefaultCharset UTF-8
 
+# Marca as visitas ao site principal (usado pelos cabeçalhos lá embaixo)
+<IfModule mod_setenvif.c>
+  SetEnvIfNoCase Host ^(www\.)?contelb\.com\.br$ SITE_PRINCIPAL
+</IfModule>
+
+# Arquivos que nunca devem ser baixados
+<FilesMatch "\.(env|sh|ps1|bat|toml|md|log|codigo)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # Subdomínios (wd e outros) e o endereço técnico do servidor passam direto, sem nenhuma regra abaixo
+  RewriteCond %{HTTP_HOST} !^(www\.)?contelb\.com\.br$ [NC]
+  RewriteRule ^ - [L]
+
+  # Pasta interna do blog: bloqueada
+  RewriteRule ^_blog(/|$) - [F,L]
 
   # URLs do site antigo (.php) vão direto para as novas, com 301 para manter o SEO
   RewriteRule ^index\.php$ https://www.contelb.com.br/ [R=301,L]
@@ -21,30 +42,36 @@ AddDefaultCharset UTF-8
   RewriteRule ^contato\.php$ https://www.contelb.com.br/contato/ [R=301,L]
   RewriteRule ^area-do-cliente/?$ https://contelbcontabilidade.app.questorpublico.com.br/Authorize/LogOn [R=302,L]
 
-  # Endereço canônico: sempre HTTPS e com www
-  RewriteCond %{HTTPS} off [OR]
-  RewriteCond %{HTTP_HOST} !^www\.contelb\.com\.br$ [NC]
-  RewriteCond %{HTTP_HOST} contelb\.com\.br$ [NC]
+  # Endereço canônico: sempre HTTPS e com www (o filtro de domínio lá em cima garante que é o site principal).
+  # Na KingHost o cache (Varnish) fica na frente: o HTTPS chega avisado pelo cabeçalho X-Forwarded-Proto.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://www.contelb.com.br%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTP_HOST} ^contelb\.com\.br$ [NC]
   RewriteRule ^ https://www.contelb.com.br%{REQUEST_URI} [R=301,L]
 
   # /pagina/index.html vira /pagina/
   RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
   RewriteRule ^ /%1 [R=301,L]
+
+  # Blog e arquivos enviados pelo painel: atendidos pelo PHP (blog.php)
+  RewriteRule ^blog-media/ blog.php [L]
+  RewriteRule ^blog(/.*)?$ blog.php [L]
 </IfModule>
 
 <IfModule mod_headers.c>
-  Header always set X-Content-Type-Options "nosniff"
-  Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  Header always set X-Frame-Options "SAMEORIGIN"
-  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set X-Content-Type-Options "nosniff" env=SITE_PRINCIPAL
+  Header always set Referrer-Policy "strict-origin-when-cross-origin" env=SITE_PRINCIPAL
+  Header always set X-Frame-Options "SAMEORIGIN" env=SITE_PRINCIPAL
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()" env=SITE_PRINCIPAL
   <FilesMatch "\.(woff2|avif|webp|jpg|png|svg|ico)$">
-    Header set Cache-Control "public, max-age=31536000, immutable"
+    Header set Cache-Control "public, max-age=31536000, immutable" env=SITE_PRINCIPAL
   </FilesMatch>
   <FilesMatch "\.(css|js)$">
-    Header set Cache-Control "public, max-age=2592000"
+    Header set Cache-Control "public, max-age=2592000" env=SITE_PRINCIPAL
   </FilesMatch>
   <FilesMatch "\.(html|xml|txt)$">
-    Header set Cache-Control "public, max-age=600"
+    Header set Cache-Control "public, max-age=600" env=SITE_PRINCIPAL
   </FilesMatch>
 </IfModule>
 

@@ -3,6 +3,32 @@
   publish = "site"
   command = ""
 
+# O painel do blog e o blog dinâmico rodam em PHP, que só existe na KingHost.
+# No Netlify esses arquivos não podem nem ser baixados: respondem como página inexistente.
+[[redirects]]
+  from = "/admin/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/admin"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/_blog/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/blog.php"
+  to = "/404.html"
+  status = 404
+  force = true
+
 [[redirects]]
   from = "/blog/pagina"
   to = "/blog/"

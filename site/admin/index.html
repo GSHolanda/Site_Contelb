@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><title>Painel do blog | Contelb</title>
+  <link rel="stylesheet" href="/admin/painel.css">
+  <script defer src="/admin/purify.min.js"></script>
+  <script defer src="/admin/painel.js"></script>
+</head>
+<body>
+<header><a href="/" class="brand">CONTELB <span>PAINEL DO BLOG</span></a><div><span id="account"></span> <button id="trocar-senha" hidden>Trocar senha</button> <button id="logout" hidden>Sair</button></div></header>
+<main>
+  <section id="login" class="welcome"><p class="eyebrow">ACESSO RESTRITO</p><h1>Seu conteúdo,<br>no blog da Contelb.</h1><p>Entre para criar artigos, adicionar imagens e documentos e publicar novidades.</p><form id="login-form" class="login-form">
+    <label for="login-email">E-mail</label><input id="login-email" type="email" autocomplete="username" required>
+    <label for="login-senha">Senha</label><input id="login-senha" type="password" autocomplete="current-password" required>
+    <button class="primary" type="submit">Entrar</button>
+  </form><p class="muted">Acesso exclusivo aos dois responsáveis autorizados.</p></section>
+  <p id="message" role="status" aria-live="polite"></p>
+  <div id="workspace" hidden>
+    <div class="heading"><div><p class="eyebrow">CONTEÚDO</p><h1>Artigos do blog</h1></div><div><button id="refresh">Atualizar lista</button> <button id="new" class="primary">+ Novo artigo</button></div></div>
+    <div class="workspace"><aside><label for="search">Buscar artigo</label><input id="search" type="search" placeholder="Título do artigo"><ul id="posts"></ul></aside>
+    <section id="editing" hidden><form id="form">
+      <div class="heading"><h2 id="editor-heading">Novo artigo</h2><span id="state" class="badge">Rascunho</span></div>
+      <label for="titulo">Título</label><input id="titulo" required maxlength="220">
+      <div class="row"><div><label for="slug">Endereço do artigo</label><input id="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="240"><small>Após salvar, o endereço fica fixo para preservar os links.</small></div><div><label for="cat">Categoria</label><select id="cat"><option value="noticia">Notícia</option><option value="gestao-de-pessoas">Gestão de Pessoas</option><option value="reforma-tributaria">Reforma Tributária</option></select></div></div>
+      <div class="row"><div><label for="date">Data e hora</label><input id="date" type="datetime-local" required></div><div><label for="capa">Imagem de capa</label><input id="capa" type="text" placeholder="Envie uma imagem pelo botão abaixo"><button id="cover-upload" type="button">Enviar capa</button></div></div>
+      <label for="resumo">Resumo</label><textarea id="resumo" required maxlength="600" rows="3"></textarea>
+      <label id="body-label">Conteúdo</label>
+      <div class="toolbar" role="toolbar" aria-label="Formatação do artigo"><button type="button" data-command="bold"><b>Negrito</b></button><button type="button" data-command="italic"><i>Itálico</i></button><button type="button" data-block="h2">Subtítulo</button><button type="button" data-block="p">Parágrafo</button><button type="button" data-command="insertUnorderedList">Lista</button><button type="button" id="link">Link</button><button type="button" id="media">Imagem / PDF / vídeo</button><button type="button" id="video">YouTube / Vimeo</button></div>
+      <div id="body" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="body-label"></div>
+      <p class="muted">Arquivos de até 3 MB. Para vídeos maiores, use um link do YouTube ou Vimeo. Arquivos enviados terão um endereço público.</p>
+      <div class="actions"><button type="button" id="preview">Pré-visualizar</button><button type="button" id="draft">Salvar rascunho</button><button type="submit" class="primary">Publicar artigo</button><a id="public-link" target="_blank" rel="noopener" hidden>Ver artigo publicado ↗</a></div>
+      <p id="save-note" role="status" aria-live="polite"></p>
+    </form></section>
+    <section id="empty"><h2>Escolha um artigo ou crie uma publicação.</h2><p>Os 15 artigos do site anterior continuam disponíveis para edição.</p></section></div>
+  </div>
+</main>
+<input type="file" id="file" hidden accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/webm">
+<dialog id="preview-dialog"><button id="close-preview">Fechar prévia</button><iframe id="preview-frame" title="Prévia do conteúdo" sandbox=""></iframe></dialog>
+<dialog id="senha-dialog"><form id="senha-form"><h2>Trocar senha</h2>
+  <label for="senha-atual">Senha atual</label><input id="senha-atual" type="password" autocomplete="current-password" required>
+  <label for="senha-nova">Nova senha (mínimo 10 caracteres)</label><input id="senha-nova" type="password" minlength="10" autocomplete="new-password" required>
+  <label for="senha-confirma">Repita a nova senha</label><input id="senha-confirma" type="password" minlength="10" autocomplete="new-password" required>
+  <p id="senha-msg" role="status" aria-live="polite"></p>
+  <div><button type="button" id="senha-cancelar">Cancelar</button> <button class="primary" type="submit">Salvar nova senha</button></div>
+</form></dialog>
+</body></html>

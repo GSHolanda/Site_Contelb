@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE } from './dados.mjs';
-import { icone, topoPagina, relacionados, trilhaSchema, ctaFaixa, btnWhats, esc } from './layout.mjs';
+import { icone, topoPagina, relacionados, trilhaSchema, ctaFaixa, btnWhats, esc, linha, grafoBase, CAMINHOS_ICONES } from './layout.mjs';
 
 const PASTA_POSTS = join(dirname(fileURLToPath(import.meta.url)), 'posts');
 
@@ -230,6 +230,34 @@ ${ctaFaixa({ msg: `Olá! Li o post "${p.titulo}" no site e quero conversar com u
     ],
     prioridade: '0.6',
   };
+}
+
+// Na KingHost o blog é servido por PHP (site/blog.php) e editado pelo painel (site/admin/).
+// Estes dados alimentam o PHP: os 15 posts iniciais e os pedaços de HTML que ele reaproveita,
+// para as páginas servidas pelo PHP saírem idênticas às geradas aqui.
+export function exportarParaPHP() {
+  const posts = POSTS.map((p, i) => ({
+    slug: p.slug,
+    titulo: p.titulo,
+    data: p.data,
+    cat: p.cat,
+    resumo: p.resumo,
+    body: readFileSync(join(PASTA_POSTS, `${p.slug}.html`), 'utf8'),
+    capa: p.img ? `/assets/img/blog/${p.img[0]}.jpg` : '',
+    capaW: p.img ? p.img[1] : 0,
+    capaH: p.img ? p.img[2] : 0,
+    capaLogo: !!(p.img && p.img[3]),
+    status: 'published',
+    seq: POSTS.length - i,
+  }));
+  const categorias = Object.fromEntries(Object.entries(CATEGORIAS).map(([id, c]) => [id, { nome: c.nome, icone: c.icone }]));
+  const fragmentos = {
+    relacionados: relacionados(['/servicos/contabilidade-completa/', '/servicos/obrigacoes-trabalhistas/', '/planejamento-tributario/', '/servicos/migrar-mei-para-me/'], 'Precisa de ajuda com algum desses temas?'),
+    ctaPost: ctaFaixa({ msg: 'XMSGX' }),
+    whatsLado: btnWhats('Falar com especialista', 'XMSGX', 'btn btn-primario'),
+    linhaTopo: linha('pagina-linha desenha'),
+  };
+  return { site: SITE, porPagina: POR_PAGINA, categorias, fragmentos, icones: CAMINHOS_ICONES, grafoBase: grafoBase(), posts };
 }
 
 export function paginasBlog() {

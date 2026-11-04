@@ -35,6 +35,7 @@ const P = {
   linkedin: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.2v.1M11.5 17v-3.8c0-1.6 1-2.7 2.4-2.7s2.1 1 2.1 2.7V17M11.5 10.5V17"/>',
   youtube: '<rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/><path d="m10 9 5 3-5 3z"/>',
 };
+export const CAMINHOS_ICONES = P;
 export const icone = (nome, cls = 'ic') =>
   `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${P[nome] || ''}</svg>`;
 
