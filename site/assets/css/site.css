@@ -61,10 +61,9 @@ main:focus{outline:none}
 .pular:focus{top:12px;color:#fff}
 .ic{width:1.15em;height:1.15em;flex:none}
 
-/* Camada de ambiente: papel pautado de livro-razão com um brilho que deriva devagar */
+/* Camada de ambiente: papel pautado de livro-razão com um brilho parado (animar aqui faz a tela ser redesenhada o tempo todo) */
 .ambiente{position:fixed;inset:0;z-index:-1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 35px,rgba(25,59,133,.035) 35px 36px),var(--canvas)}
-.ambiente::after{content:"";position:absolute;width:80vmax;height:80vmax;left:-20vmax;top:-30vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(98,184,233,.16),rgba(98,184,233,0));animation:deriva 90s var(--ease-io) -30s infinite alternate}
-@keyframes deriva{from{transform:translate3d(0,0,0)}to{transform:translate3d(60vw,70vh,0)}}
+.ambiente::after{content:"";position:absolute;width:80vmax;height:80vmax;left:-20vmax;top:-30vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(98,184,233,.16),rgba(98,184,233,0))}
 body.paused *,body.paused *::before,body.paused *::after{animation-play-state:paused!important}
 
 /* ---------- Tipos auxiliares ---------- */
@@ -198,7 +197,7 @@ html:not(.js) .band-3{margin-top:40px}
 .hero-marco{font:700 clamp(4.5rem,11vw,9rem)/.9 var(--f-display);letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.5px rgba(98,184,233,.75);text-shadow:none;margin:0 0 .1em;opacity:calc(.2 + .8*var(--k,0));transform:translateY(calc((1 - var(--k,0))*30px))}
 .hero-provas{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.4em}
 .hero-dica{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);gap:.4em;transition:opacity .5s var(--ease)}
-.hero-dica .ic{animation:dica 2.4s var(--ease-io) -1s infinite}
+.hero-dica .ic{animation:dica 2.4s var(--ease-io) 3}
 @keyframes dica{0%,100%{transform:translateY(-2px)}50%{transform:translateY(3px)}}
 .hero.passou-topo .hero-dica{opacity:0}
 
